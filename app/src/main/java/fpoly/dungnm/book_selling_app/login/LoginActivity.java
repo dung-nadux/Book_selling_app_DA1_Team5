@@ -18,10 +18,9 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import fpoly.dungnm.book_selling_app.MainActivity;
 import fpoly.dungnm.book_selling_app.R;
 import fpoly.dungnm.book_selling_app.login.forgotpass.ForgotPasswordActivity;
-import fpoly.dungnm.book_selling_app.screens.HomeActivity;
+import fpoly.dungnm.book_selling_app.screens.ScreensActivity;
 
 public class LoginActivity extends AppCompatActivity {
     private TextInputEditText etEmail, etPassword;
@@ -104,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (user != null) {
                             Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                             // Chuyển đến màn hình chính hoặc màn hình khác sau khi đăng nhập thành công
-                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, ScreensActivity.class);
                             startActivity(intent);
                             finish();
                         }
