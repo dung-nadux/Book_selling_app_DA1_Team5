@@ -82,17 +82,17 @@ public class ScreensActivity extends AppCompatActivity implements NavigationView
                 repalceFragment(new ProfileFragment());
                 currentFragment = 3;
             }
-        }else if (id == R.id.nav_profile) {
+        }else if (id == R.id.nav_user) {
             if (currentFragment != 4) {
                 repalceFragment(new UserFragment());
                 currentFragment = 4;
             }
-        }else if (id == R.id.nav_profile) {
+        }else if (id == R.id.nav_product) {
             if (currentFragment != 5) {
                 repalceFragment(new ProductFragment());
                 currentFragment = 5;
             }
-        }else if (id == R.id.nav_profile) {
+        }else if (id == R.id.nav_alalytics) {
             if (currentFragment != 6) {
                 repalceFragment(new AnalytistFragment());
                 currentFragment = 6;
