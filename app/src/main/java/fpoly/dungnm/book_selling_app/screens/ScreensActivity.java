@@ -28,12 +28,9 @@ import fpoly.dungnm.book_selling_app.screens.fragment.ProfileFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.UserFragment;
 
 public class ScreensActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    public static final int FRAGMENT_HOME = 0;
-//    public static final int FRAGMENT_NEWS = 1;
-//    public static final int FRAGMENT_CONTACTS = 2;
     DrawerLayout drawerLayout;
     Toolbar toolbar;
-    private int currentFragment = FRAGMENT_HOME;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,60 +50,32 @@ public class ScreensActivity extends AppCompatActivity implements NavigationView
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // cách 1 muốn hiển thị phần home khi vừa chạy
-        repalceFragment(new HomeFragment());
-        navigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
-
+        getSupportFragmentManager().beginTransaction().replace(R.id.frContent, new HomeFragment()).commit();
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        Fragment fragment = null;
         int id = menuItem.getItemId();
         if (id == R.id.nav_home) {
-            if (currentFragment != 0) {
-                repalceFragment(new HomeFragment());
-                currentFragment = 0;
-            }
+            fragment = new HomeFragment();
         } else if (id == R.id.nav_cart) {
-            if (currentFragment != 1) {
-                repalceFragment(new CartFragment());
-                currentFragment = 1;
-            }
+            fragment = new HomeFragment();
         } else if (id == R.id.nav_order) {
-            if (currentFragment != 2) {
-                repalceFragment(new OrderFragment());
-                currentFragment = 2;
-            }
-        }else if (id == R.id.nav_profile) {
-            if (currentFragment != 3) {
-                repalceFragment(new ProfileFragment());
-                currentFragment = 3;
-            }
-        }else if (id == R.id.nav_user) {
-            if (currentFragment != 4) {
-                repalceFragment(new UserFragment());
-                currentFragment = 4;
-            }
-        }else if (id == R.id.nav_product) {
-            if (currentFragment != 5) {
-                repalceFragment(new ProductFragment());
-                currentFragment = 5;
-            }
-        }else if (id == R.id.nav_alalytics) {
-            if (currentFragment != 6) {
-                repalceFragment(new AnalytistFragment());
-                currentFragment = 6;
-            }
+            fragment = new OrderFragment();
+        } else if (id == R.id.nav_profile) {
+            fragment = new ProfileFragment();
+        } else if (id == R.id.nav_user) {
+            fragment = new UserFragment();
+        } else if (id == R.id.nav_product) {
+            fragment = new ProductFragment();
+        } else if (id == R.id.nav_alalytics) {
+            fragment = new AnalytistFragment();
         }
         // Đóng ngăn kéo sau khi chọn mục
-        drawerLayout.closeDrawer(GravityCompat.START);
+        getSupportFragmentManager().beginTransaction().replace(R.id.frContent, fragment).commit();
+        drawerLayout.closeDrawers();
         return true;
-    }
-
-    private void repalceFragment(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frContent, fragment);
-        transaction.commit();
     }
 
 
