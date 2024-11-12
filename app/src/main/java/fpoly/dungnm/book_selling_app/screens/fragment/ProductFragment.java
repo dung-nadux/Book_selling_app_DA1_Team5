@@ -36,10 +36,6 @@ public class ProductFragment extends Fragment {
         tabLayout = view.findViewById(R.id.tabLayout);
         viewPager2 = view.findViewById(R.id.viewPager2);
 
-//        if (getSupportActionBar() != null){
-//            getSupportActionBar().hide();
-//        }
-
         tabChuyenman = new TabChuyenman(getActivity());
         viewPager2.setAdapter(tabChuyenman);
 

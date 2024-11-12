@@ -14,23 +14,24 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Tạo bảng book với các cột id, image, title, author, price, description, category
+        // Tạo bảng PRODUCTS
         String createTable = "CREATE TABLE PRODUCTS(" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "image TEXT, " +
+                "image BLOB, " + // Đổi từ TEXT sang BLOB
                 "title TEXT, " +
                 "author TEXT, " +
                 "price INTEGER, " +
                 "description TEXT, " +
-                "category TEXT);";
+                "category TEXT" +
+                ");";
         db.execSQL(createTable);
 
         // Chèn các giá trị mẫu vào bảng book
-        String insertSampleData = "INSERT INTO PRODUCTS(image, title, author, price, description, category) VALUES " +
-                "( 'image1.png', 'Learning Java', 'Author A', 100, 'Java basics', 'Education'), " +
-                "( 'image2.png', 'Learning C++', 'Author B', 150, 'C++ basics', 'Education'), " +
-                "('image3.png', 'Learning Python', 'Author C', 120, 'Python basics', 'Education');";
-        db.execSQL(insertSampleData);
+//        String insertSampleData = "INSERT INTO PRODUCTS(image, title, author, price, description, category) VALUES " +
+//                "( 'image1.png', 'Learning Java', 'Author A', 100, 'Java basics', 'Education'), " +
+//                "( 'image2.png', 'Learning C++', 'Author B', 150, 'C++ basics', 'Education'), " +
+//                "('image3.png', 'Learning Python', 'Author C', 120, 'Python basics', 'Education');";
+//        db.execSQL(insertSampleData);
     }
 
     @Override

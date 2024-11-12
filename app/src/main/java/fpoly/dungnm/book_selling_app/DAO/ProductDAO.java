@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -27,63 +29,55 @@ public class ProductDAO {
         Cursor cursor = database.rawQuery("SELECT * FROM PRODUCTS", null);
         if (cursor.moveToFirst()) {
             do {
+                // Chuyển đổi image từ byte array
+                byte[] imageBytes = cursor.getBlob(1);
                 productList.add(new ModelProducts(
-                        cursor.getInt(0),     // id
-                        cursor.getString(1),     // image
-                        cursor.getString(2),     // title
-                        cursor.getString(3),     // author
-                        cursor.getInt(4),        // price
-                        cursor.getString(5),     // description
-                        cursor.getString(6)      // category
+                        cursor.getInt(0),      // id
+                        imageBytes,            // image
+                        cursor.getString(2),   // title
+                        cursor.getString(3),   // author
+                        cursor.getInt(4),      // price
+                        cursor.getString(5),   // description
+                        cursor.getString(6)    // category
                 ));
             } while (cursor.moveToNext());
         }
-//        cursor.close();
+        cursor.close();
         return productList;
     }
 
     // Thêm sản phẩm mới
     public boolean insertProduct(ModelProducts product) {
-        database = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("id", product.getId());
-        values.put("image", product.getImage());
+
+        values.put("image", product.getImage());  // Chuyển ảnh vào BLOB
         values.put("title", product.getTitle());
         values.put("author", product.getAuthor());
         values.put("price", product.getPrice());
         values.put("description", product.getDescription());
         values.put("category", product.getCategory());
-        long result = database.insert("book", null, values);
-        return result != -1;
+        long result = database.insert("PRODUCTS", null, values);
+
+        return result > 0;
     }
+
 
     // Cập nhật thông tin sản phẩm
     public boolean updateProduct(ModelProducts product) {
-        database = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("image", product.getImage());
+        values.put("image", product.getImage());  // Chuyển ảnh vào BLOB
         values.put("title", product.getTitle());
         values.put("author", product.getAuthor());
         values.put("price", product.getPrice());
         values.put("description", product.getDescription());
         values.put("category", product.getCategory());
-        int result = database.update("book", values, "id = ?", new String[]{product.getId()+""});
+        int result = database.update("PRODUCTS", values, "id = ?", new String[]{String.valueOf(product.getId())});
         return result > 0;
     }
 
     // Xóa sản phẩm
-    public boolean deleteProduct(String id) {
-        database = dbHelper.getWritableDatabase();
-        int result = database.delete("book", "id = ?", new String[]{id});
-        return result > 0;
-    }
-
-    // Cập nhật trạng thái hoặc thuộc tính cụ thể (Ví dụ: cập nhật giá)
-    public boolean updateProductPrice(String id, int newPrice) {
-        database = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("price", newPrice);
-        int result = database.update("book", values, "id = ?", new String[]{id});
+    public boolean deleteProduct(int id) {
+        int result = database.delete("PRODUCTS", "id = ?", new String[]{String.valueOf(id)});
         return result > 0;
     }
 }
