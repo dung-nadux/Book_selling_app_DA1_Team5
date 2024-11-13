@@ -31,6 +31,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import fpoly.dungnm.book_selling_app.DAO.ProductDAO;
 import fpoly.dungnm.book_selling_app.R;
@@ -89,6 +90,7 @@ public class SanPhamFragment extends Fragment {
 
             @Override
             public void updateItem(String id, String image, String title, String author, String price, String description, String category) {
+                Log.e("=========//////////", image );
                 showAlertDialogUpdate(id, image, title, author, price, description, category);
             }
 
@@ -171,6 +173,7 @@ public class SanPhamFragment extends Fragment {
         // Gọi phương thức insertProduct từ DAO để lưu sản phẩm vào cơ sở dữ liệu
         boolean isInserted = productDAO.insertProduct(product);
         if(isInserted){
+            Log.d("đường dẫn ảnh", Arrays.toString(imageByteArray));
             Toast.makeText(getContext(), "Thêm sản phẩm thành công", Toast.LENGTH_SHORT).show();
             listProducts = productDAO.getAllProducts();
             adapter.setData(listProducts);
@@ -178,7 +181,6 @@ public class SanPhamFragment extends Fragment {
         }else{
             Toast.makeText(getContext(), "Thêm sản phẩm thất bại", Toast.LENGTH_SHORT).show();
         }
-
 
         // Thực hiện lưu dữ liệu vào cơ sở dữ liệu hoặc thao tác khác ở đây
         // Ví dụ: Sử dụng DAO để lưu sản phẩm vào SQLite hoặc Firebase
@@ -219,13 +221,13 @@ public class SanPhamFragment extends Fragment {
         edCategory.setText(category);
 
         // Hiển thị ảnh hiện tại nếu có
-//        if (image != null && !image.isEmpty()) {
-//            Glide.with(getContext()).load(image).into(ivImage);
-//        }
-        // Hiển thị ảnh hiện tại nếu có
         if (image != null && !image.isEmpty()) {
             // Chuyển đổi chuỗi byte thành mảng byte[] và sau đó decode thành Bitmap
-            byte[] imageBytes = image.getBytes(); // Giả sử image là chuỗi byte
+            String[] byteStrings = image.replaceAll("[\\[\\] ]", "").split(","); // Xóa dấu ngoặc và khoảng trắng
+            byte[] imageBytes = new byte[byteStrings.length];
+            for (int i = 0; i < byteStrings.length; i++) {
+                imageBytes[i] = Byte.parseByte(byteStrings[i]);
+            }
             Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
             ivImage.setImageBitmap(bitmap);
         }
@@ -252,9 +254,11 @@ public class SanPhamFragment extends Fragment {
             updatedProduct.setDescription(updatedDescription);
             updatedProduct.setCategory(updatedCategory);
 
+            // Kiểm tra xem có ảnh mới không
             if (imageUri != null) {
-                updatedProduct.setImage(imageUri.toString().getBytes());
+                updatedProduct.setImage(imageUriToByteArray(imageUri)); // Chuyển đổi ảnh mới thành byte[]
             } else {
+                // Giữ nguyên ảnh cũ
                 updatedProduct.setImage(image.getBytes());
             }
 

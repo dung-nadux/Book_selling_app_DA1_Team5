@@ -50,6 +50,7 @@ public class AdapterProducts extends RecyclerView.Adapter<AdapterProducts.ViewHo
 
     private OnItemClickListener click;
 
+
     public void setData(ArrayList<ModelProducts> ls) {
         this.list = ls;
         notifyDataSetChanged();
