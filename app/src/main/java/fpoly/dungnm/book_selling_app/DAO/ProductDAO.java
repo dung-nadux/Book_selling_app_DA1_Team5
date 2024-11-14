@@ -80,4 +80,29 @@ public class ProductDAO {
         int result = database.delete("PRODUCTS", "id = ?", new String[]{String.valueOf(id)});
         return result > 0;
     }
+
+    // Lấy sản phẩm theo ID
+    public ModelProducts getProductById(int id) {
+        ModelProducts product = null;
+        database = dbHelper.getReadableDatabase();
+        Cursor cursor = database.rawQuery("SELECT * FROM PRODUCTS WHERE id = ?", new String[]{String.valueOf(id)});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            byte[] imageBytes = cursor.getBlob(1);
+            product = new ModelProducts(
+                    cursor.getInt(0),      // id
+                    imageBytes,            // image
+                    cursor.getString(2),   // title
+                    cursor.getString(3),   // author
+                    cursor.getInt(4),      // price
+                    cursor.getString(5),   // description
+                    cursor.getString(6)    // category
+            );
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        return product;
+    }
+
 }

@@ -45,7 +45,7 @@ public class HomeFragment extends Fragment implements Filterable {
 
         productDAO = new ProductDAO(getContext());
         listProducts = productDAO.getAllProducts();
-         filteredProducts = new ArrayList<>(listProducts); // Khởi tạo danh sách đã lọc
+        filteredProducts = new ArrayList<>(listProducts); // Khởi tạo danh sách đã lọc
 
         // Thiết lập RecyclerView
         // Thiết lập RecyclerView với GridLayoutManager

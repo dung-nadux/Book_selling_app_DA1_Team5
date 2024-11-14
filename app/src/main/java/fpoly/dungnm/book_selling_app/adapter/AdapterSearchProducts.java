@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -56,7 +57,7 @@ public class AdapterSearchProducts extends RecyclerView.Adapter<AdapterSearchPro
             holder.itemImage.setImageBitmap(bitmap);
         } else {
             // Hiển thị ảnh mặc định nếu không có ảnh
-            holder.itemImage.setImageResource(android.R.drawable.ic_dialog_alert); // Ví dụ: ảnh mặc định
+            holder.itemImage.setImageResource(R.drawable.ic_launcher_background); // Ví dụ: ảnh mặc định
         }
 
 
@@ -74,17 +75,13 @@ public class AdapterSearchProducts extends RecyclerView.Adapter<AdapterSearchPro
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ProductDetailsActivity.class);
             intent.putExtra("productId", product.getId());
-            intent.putExtra("productTitle", product.getTitle());
-            intent.putExtra("productAuthor", product.getAuthor());
-            intent.putExtra("productPrice", product.getPrice());
-            intent.putExtra("productDescription", product.getDescription());
-            intent.putExtra("productCategory", product.getCategory());
 
-             // Chuyển đổi byte array thành String nếu cần
-        if (product.getImage() != null) {
-        intent.putExtra("productImage", product.getImage());
-         }
             context.startActivity(intent);
+        });
+
+        holder.itemView.setOnLongClickListener(v -> {
+            Toast.makeText(context, "chọn thành công"+ product.getId(), Toast.LENGTH_SHORT).show();
+            return true;
         });
 
     }

@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +30,8 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,6 +68,17 @@ public class SanPhamFragment extends Fragment {
 
         productDAO = new ProductDAO(getContext());
         listProducts = productDAO.getAllProducts();
+
+        // fix cứng  liệu
+//        listProducts.add(new ModelProducts(
+//        1,
+//        https://picsum.photos/200/300,
+//        "Book 1",
+//        "Author 1",
+//        1000,
+//                "Description 1",
+//        "Category 1"
+//        ));
 
         // Thiết lập RecyclerView
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
@@ -164,6 +178,14 @@ public class SanPhamFragment extends Fragment {
         String description = edDescription.getText().toString();
         String category = edCategory.getText().toString();
 
+        // cách 1
+        // Lưu hình ảnh vào bộ nhớ ngoài
+//        String imagePath = saveImageToExternalStorage(imageUri);
+//
+//        // Tạo đối tượng ModelProducts
+//        ModelProducts product = new ModelProducts(imagePath.getBytes(), title, author, price, description, category);
+
+        // cách 2
         // Chuyển đổi ảnh thành byte[]
         byte[] imageByteArray = imageUriToByteArray(imageUri);
 
@@ -172,33 +194,32 @@ public class SanPhamFragment extends Fragment {
 
         // Gọi phương thức insertProduct từ DAO để lưu sản phẩm vào cơ sở dữ liệu
         boolean isInserted = productDAO.insertProduct(product);
-        if(isInserted){
-            Log.d("đường dẫn ảnh", Arrays.toString(imageByteArray));
+        if (isInserted) {
             Toast.makeText(getContext(), "Thêm sản phẩm thành công", Toast.LENGTH_SHORT).show();
             listProducts = productDAO.getAllProducts();
             adapter.setData(listProducts);
-//            adapter.notifyDataSetChanged();
-        }else{
+        } else {
             Toast.makeText(getContext(), "Thêm sản phẩm thất bại", Toast.LENGTH_SHORT).show();
         }
-
-        // Thực hiện lưu dữ liệu vào cơ sở dữ liệu hoặc thao tác khác ở đây
-        // Ví dụ: Sử dụng DAO để lưu sản phẩm vào SQLite hoặc Firebase
-        Log.d("AddProduct", "Product saved: " + title);
     }
 
-    // Chuyển đổi ảnh thành byte[]
-    private byte[] imageUriToByteArray(Uri uri) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    private String saveImageToExternalStorage(Uri uri) {
+        String imagePath = null;
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            String fileName = "IMG_" + System.currentTimeMillis() + ".jpg";
+            File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            File imageFile = new File(storageDir, fileName);
+            FileOutputStream fos = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+            imagePath = imageFile.getAbsolutePath();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return byteArrayOutputStream.toByteArray();
+        return imagePath;
     }
-
 
     private void showAlertDialogUpdate(String productId, String image, String title, String author, String price, String description, String category) {
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.item_product_add, null);
@@ -301,6 +322,18 @@ public class SanPhamFragment extends Fragment {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, 102);
+    }
+
+    private byte[] imageUriToByteArray(Uri uri) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+            // Nén hình ảnh với chất lượng 80%
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return byteArrayOutputStream.toByteArray();
     }
 
 }

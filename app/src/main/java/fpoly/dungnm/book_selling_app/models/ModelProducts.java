@@ -2,7 +2,7 @@ package fpoly.dungnm.book_selling_app.models;
 
 public class ModelProducts {
     int id;
-     byte[] image;
+    byte[] image;
     String title;
     String author;
     int price;
