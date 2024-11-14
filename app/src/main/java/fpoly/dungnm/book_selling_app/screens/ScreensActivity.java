@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
@@ -12,14 +13,19 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
 
 import fpoly.dungnm.book_selling_app.R;
+import fpoly.dungnm.book_selling_app.login.LoginActivity;
 import fpoly.dungnm.book_selling_app.pages.search.SearchActivity;
 import fpoly.dungnm.book_selling_app.screens.fragment.AnalytistFragment;
+import fpoly.dungnm.book_selling_app.screens.fragment.CartFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.HomeFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.OrderFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.ProductFragment;
@@ -30,6 +36,7 @@ public class ScreensActivity extends AppCompatActivity implements NavigationView
     DrawerLayout drawerLayout;
     Toolbar toolbar;
     ImageView imgSearch;
+    EditText edSearchClick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,53 +47,58 @@ public class ScreensActivity extends AppCompatActivity implements NavigationView
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawer_layout);
         imgSearch = findViewById(R.id.imgSearch);
+        edSearchClick = findViewById(R.id.edSearchClick);
+        NavigationView navigationView = findViewById(R.id.navigation_view);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);  // Tắt hiển thị title
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);  // Tắt hiển thị title
+
+        // phân quyền
+        Intent intent = getIntent();
+        String role = intent.getStringExtra("role");
+
+        if ("0".equals(role)) {
+            navigationView.getMenu().findItem(R.id.nav_product).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_alalytics).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_user).setVisible(false);
+        }else {
+            navigationView.getMenu().findItem(R.id.nav_product).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_alalytics).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_user).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_cart).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_order).setVisible(false);
+        }
+
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_drawer_open, R.string.nav_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.navigation_view);
+        // Đặt sự kiện cho NavigationView
         navigationView.setNavigationItemSelectedListener(this);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frContent, new HomeFragment()).commit();
+        getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frContent);
+            if (currentFragment instanceof HomeFragment ) {
+                toolbar.setVisibility(View.VISIBLE);
+                imgSearch.setVisibility(View.VISIBLE);
+            } else {
+                toolbar.setVisibility(View.GONE);
+            }
+        });
 
-        imgSearch.setOnClickListener(v -> {
+        edSearchClick.setOnClickListener(v -> {
             startActivity(new Intent(this, SearchActivity.class));
         });
-        // Thêm listener cho SearchView
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                // Xử lý khi người dùng nhấn tìm kiếm
-//                // return false;
-//
-//                  // Mở SearchResultsActivity khi nhấn tìm kiếm
-//                Intent intent = new Intent(ScreensActivity.this, SearchActivity.class);
-//                intent.putExtra("search_query", query); // Truyền query tìm kiếm
-//                startActivity(intent);
-//                return true; // Trả về true để chỉ ra rằng sự kiện đã được xử lý
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                // Gọi phương thức tìm kiếm trong HomeFragment
-//                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frContent);
-//                if (fragment instanceof HomeFragment) {
-//                    ((HomeFragment) fragment).filter(newText); // Gọi phương thức filter trong HomeFragment
-//                }
-//                return true;
-//            }
-//        });
-
-        // Thêm listener cho biểu tượng tìm kiếm
 
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+
         Fragment fragment = null;
         int id = menuItem.getItemId();
         if (id == R.id.nav_home) {
@@ -94,9 +106,13 @@ public class ScreensActivity extends AppCompatActivity implements NavigationView
             imgSearch.setVisibility(View.VISIBLE); // Show SearchView
         } else {
             // Other fragments
-            if (id == R.id.nav_order) {
+            if(id ==R.id.nav_cart){
+                fragment = new CartFragment();
+            }
+            else if (id == R.id.nav_order) {
                 fragment = new OrderFragment();
             } else if (id == R.id.nav_profile) {
+                toolbar.setVisibility(View.GONE);
                 fragment = new ProfileFragment();
             } else if (id == R.id.nav_user) {
                 fragment = new UserFragment();
@@ -105,23 +121,29 @@ public class ScreensActivity extends AppCompatActivity implements NavigationView
             } else if (id == R.id.nav_alalytics) {
                 fragment = new AnalytistFragment();
             }
+            else if (id == R.id.nav_logout) {
+                startActivity(new Intent(this, LoginActivity.class));
+            }
             imgSearch.setVisibility(View.GONE); // Hide SearchView
+
         }
 
         // Đóng ngăn kéo sau khi chọn mục
-        getSupportFragmentManager().beginTransaction().replace(R.id.frContent, fragment).commit();
+        transaction.replace(R.id.frContent, fragment);
+        transaction.addToBackStack("HomeFragment");
+        transaction.commit();
         drawerLayout.closeDrawers();
         return true;
     }
 
 
-    // @Override
-    // public void onBackPressed() {
-    //     if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-    //         drawerLayout.closeDrawer(GravityCompat.START);
-    //     } else {
-    //         super.onBackPressed();
-    //     }
-    // }
+     @Override
+     public void onBackPressed() {
+         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+             drawerLayout.closeDrawer(GravityCompat.START);
+         } else {
+             super.onBackPressed();
+         }
+     }
 
 }

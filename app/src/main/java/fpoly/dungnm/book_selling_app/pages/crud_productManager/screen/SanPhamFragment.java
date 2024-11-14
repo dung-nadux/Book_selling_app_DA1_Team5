@@ -69,17 +69,6 @@ public class SanPhamFragment extends Fragment {
         productDAO = new ProductDAO(getContext());
         listProducts = productDAO.getAllProducts();
 
-        // fix cứng  liệu
-//        listProducts.add(new ModelProducts(
-//        1,
-//        https://picsum.photos/200/300,
-//        "Book 1",
-//        "Author 1",
-//        1000,
-//                "Description 1",
-//        "Category 1"
-//        ));
-
         // Thiết lập RecyclerView
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(RecyclerView.VERTICAL);

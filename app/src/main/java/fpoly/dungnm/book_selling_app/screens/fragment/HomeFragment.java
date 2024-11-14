@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -13,19 +14,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import fpoly.dungnm.book_selling_app.DAO.ProductDAO;
 import fpoly.dungnm.book_selling_app.R;
+import fpoly.dungnm.book_selling_app.adapter.AdapterHomeProducts;
 import fpoly.dungnm.book_selling_app.adapter.AdapterProducts;
 import fpoly.dungnm.book_selling_app.models.ModelProducts;
 
 
 public class HomeFragment extends Fragment implements Filterable {
     RecyclerView rcvHome;
-    AdapterProducts adapter;
+    AdapterHomeProducts adapter;
     ArrayList<ModelProducts> listProducts = new ArrayList<>();
     ProductDAO productDAO;
     private List<ModelProducts> filteredProducts; // Danh sách sản phẩm đã lọc
@@ -47,15 +50,27 @@ public class HomeFragment extends Fragment implements Filterable {
         listProducts = productDAO.getAllProducts();
         filteredProducts = new ArrayList<>(listProducts); // Khởi tạo danh sách đã lọc
 
+//        // Thiết lập RecyclerView
+//        // Thiết lập RecyclerView với GridLayoutManager
+//        GridLayoutManager manager = new GridLayoutManager(getContext(), 2); // Số 2 là số cột
+//        rcvHome.setLayoutManager(manager);
+//
+//        // adapter = new AdapterProducts(getContext(), listProducts);
+//         adapter = new AdapterProducts(getContext(), (ArrayList<ModelProducts>) filteredProducts);
+//
+//        rcvHome.setAdapter(adapter);
+//
+//        productDAO = new ProductDAO(getContext());
+//        listProducts = productDAO.getAllProducts();
+
         // Thiết lập RecyclerView
-        // Thiết lập RecyclerView với GridLayoutManager
-        GridLayoutManager manager = new GridLayoutManager(getContext(), 2); // Số 2 là số cột
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        manager.setOrientation(RecyclerView.HORIZONTAL);
         rcvHome.setLayoutManager(manager);
 
-        // adapter = new AdapterProducts(getContext(), listProducts);
-         adapter = new AdapterProducts(getContext(), (ArrayList<ModelProducts>) filteredProducts);
+        adapter = new AdapterHomeProducts(getContext(), listProducts);
 
-//        rcvHome.setAdapter(adapter);
+        rcvHome.setAdapter(adapter);
     }
 
     // Phương thức filter để lọc danh sách sản phẩm
@@ -105,5 +120,11 @@ public class HomeFragment extends Fragment implements Filterable {
                 adapter.notifyDataSetChanged(); // Cập nhật adapter
             }
         };
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Toast.makeText(getContext(), "DIstroy home", Toast.LENGTH_SHORT).show();
     }
 }

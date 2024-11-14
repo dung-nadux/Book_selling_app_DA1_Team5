@@ -5,10 +5,14 @@
     android:layout_height="match_parent"
     tools:context=".screens.fragment.ProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Cá nhân" />
+    <ImageView
+        android:id="@+id/imgBackProfile"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="Cá nhân"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:src="@drawable/back"
+        />
 
 </FrameLayout>

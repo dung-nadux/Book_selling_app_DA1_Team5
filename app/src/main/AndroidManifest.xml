@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Book_selling_app"
         tools:targetApi="31">
         <activity
+            android:name=".screens.TestActivity"
+            android:exported="false" />
+        <activity
             android:name=".pages.productdetail.ProductDetailsActivity"
             android:exported="false" />
         <activity

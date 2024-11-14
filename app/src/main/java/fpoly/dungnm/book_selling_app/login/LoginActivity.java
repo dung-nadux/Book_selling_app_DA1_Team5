@@ -27,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView tvForgotPassword, tvSignUp;
 
     private FirebaseAuth mAuth;
+    String checkRole = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,8 +104,16 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                             // Chuyển đến màn hình chính hoặc màn hình khác sau khi đăng nhập thành công
                             Intent intent = new Intent(LoginActivity.this, ScreensActivity.class);
+                            if(email.equals("admin@gmail.com")){
+                                checkRole = "1";
+                                intent.putExtra("role",checkRole );
+                            }else {
+                                checkRole = "0";
+                                intent.putExtra("role",checkRole );
+                            }
                             startActivity(intent);
                             finish();
+
                         }
                     } else {
                         // Đăng nhập thất bại
