@@ -56,7 +56,7 @@
         </menu>
     </item>
 
-    <item android:title="">
+    <item android:title="Thoát">
         <menu>
             <item
                 android:id="@+id/nav_logout"

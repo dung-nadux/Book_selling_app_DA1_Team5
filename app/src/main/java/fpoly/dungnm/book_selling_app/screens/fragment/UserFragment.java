@@ -2,65 +2,134 @@ package fpoly.dungnm.book_selling_app.screens.fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import fpoly.dungnm.book_selling_app.R;
+import fpoly.dungnm.book_selling_app.adapter.AdapterUser;
+import fpoly.dungnm.book_selling_app.models.ModelProducts;
+import fpoly.dungnm.book_selling_app.models.ModelUser;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link UserFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class UserFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public UserFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment UserFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static UserFragment newInstance(String param1, String param2) {
-        UserFragment fragment = new UserFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
+    private RecyclerView rvUser;
+    private AdapterUser userAdapter;
+    private ArrayList<ModelUser> userList;
+    private FirebaseFirestore db;
+    TextInputLayout edSearchUser;
+    ImageView imgBackUser;
+    private ArrayList<ModelUser> filteredUserList;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_user, container, false);
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        rvUser = view.findViewById(R.id.rvUser);
+        edSearchUser = view.findViewById(R.id.edSearchUser);
+        imgBackUser = view.findViewById(R.id.imgBackUser);
+
+        filteredUserList = new ArrayList<>();
+
+        // Thiết lập RecyclerView
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        manager.setOrientation(RecyclerView.VERTICAL);
+        rvUser.setLayoutManager(manager);
+
+        userList = new ArrayList<>();
+        userAdapter = new AdapterUser(getContext(),userList);
+        rvUser.setAdapter(userAdapter);
+
+        db = FirebaseFirestore.getInstance();
+        loadUsersFromFirestore();
+
+        imgBackUser.setOnClickListener(v -> {
+            getActivity().onBackPressed();
+        });
+
+        // Tìm kiếm theo sự thay đổi trong TextInputLayout
+        edSearchUser.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filterUsers(s.toString());
+            }
+        });
+
+
+        // Xử lý tìm kiếm khi nhấn nút
+//        btnSearchUser.setOnClickListener(v -> {
+//            String searchText = edSearchUser.getEditText().getText().toString();
+//            filterUsers(searchText);
+//        });
+
+    }
+
+    private void loadUsersFromFirestore() {
+        db.collection("users")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        userList.clear();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            ModelUser user = document.toObject(ModelUser.class);
+                            user.setId(document.getId());
+                            userList.add(user);
+
+                        }
+                        userAdapter.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(getContext(), "Lỗi khi tải danh sách người dùng", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    // Lắng nghe sự kiện nhập liệu từ ô tìm kiếm và tìm kiếm trực tiếp , tự động
+
+    private void filterUsers(String query) {
+        filteredUserList.clear();
+        if (query.isEmpty()) {
+            filteredUserList.addAll(userList);
+        } else {
+            String lowerCaseQuery = query.toLowerCase();
+            for (ModelUser user : userList) {
+                if (user.getUsername().toLowerCase().contains(lowerCaseQuery) ||
+                        user.getEmail().toLowerCase().contains(lowerCaseQuery)) {
+                    filteredUserList.add(user);
+                }
+            }
+        }
+        userAdapter.notifyDataSetChanged();
+    }
+
 }

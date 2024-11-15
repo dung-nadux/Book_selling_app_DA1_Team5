@@ -24,6 +24,7 @@ import com.google.android.material.navigation.NavigationView;
 import fpoly.dungnm.book_selling_app.R;
 import fpoly.dungnm.book_selling_app.login.LoginActivity;
 import fpoly.dungnm.book_selling_app.pages.search.SearchActivity;
+import fpoly.dungnm.book_selling_app.screens.fragment.AbouUsFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.AnalytistFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.CartFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.HomeFragment;
@@ -31,6 +32,7 @@ import fpoly.dungnm.book_selling_app.screens.fragment.OrderFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.ProductFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.ProfileFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.SettingsFragment;
+import fpoly.dungnm.book_selling_app.screens.fragment.SupportFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.UserFragment;
 
 public class ScreensActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -109,27 +111,29 @@ public class ScreensActivity extends AppCompatActivity implements NavigationView
             // Other fragments
             if(id ==R.id.nav_cart){
                 fragment = new CartFragment();
-            }
-            else if (id == R.id.nav_order) {
+            }else if (id == R.id.nav_order) {
                 fragment = new OrderFragment();
-            } else if (id == R.id.nav_profile) {
+            }else if (id == R.id.nav_profile) {
                 toolbar.setVisibility(View.GONE);
                 fragment = new ProfileFragment();
-            } else if (id == R.id.nav_user) {
+            }else if (id == R.id.nav_user) {
                 fragment = new UserFragment();
-            } else if (id == R.id.nav_product) {
+            }else if (id == R.id.nav_product) {
                 fragment = new ProductFragment();
-            } else if (id == R.id.nav_alalytics) {
+            }else if (id == R.id.nav_alalytics) {
                 fragment = new AnalytistFragment();
             }else if (id == R.id.nav_setting) {
                 toolbar.setVisibility(View.VISIBLE);
                 fragment = new SettingsFragment();
+            }else if (id == R.id.nav_support) {
+                fragment = new SupportFragment();
+            }else if (id == R.id.nav_aboutus) {
+                fragment = new AbouUsFragment();
             }
             else if (id == R.id.nav_logout) {
                 startActivity(new Intent(this, LoginActivity.class));
             }
             imgSearch.setVisibility(View.GONE); // Hide SearchView
-
         }
 
         // Đóng ngăn kéo sau khi chọn mục

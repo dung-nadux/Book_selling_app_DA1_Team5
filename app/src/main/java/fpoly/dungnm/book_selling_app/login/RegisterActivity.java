@@ -56,66 +56,64 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         btnSignUp.setOnClickListener(v -> {
-            String username = etUsername.getText().toString().trim();
-            String email = etEmail.getText().toString().trim();
-            String password = etPassword.getText().toString().trim();
-            String confirmPassword = etConfirmPassword.getText().toString().trim();
-
-            if (validateInputs(username, email, password, confirmPassword)) {
-                registerUser(username, email, password);
-            }
+            registerUser();
         });
     }
 
-    private boolean validateInputs(String username, String email, String password, String confirmPassword) {
-        if (username.isEmpty()) {
-            etUsername.setError("Vui lòng nhập tên của bạn");
-            return false;
-        }
-        if (email.isEmpty()) {
-            etEmail.setError("Vui lòng nhập địa chỉ email");
-            return false;
-        }
-        if (password.isEmpty()) {
-            etPassword.setError("Vui lòng nhập mật khẩu");
-            return false;
-        }
-        if (!password.equals(confirmPassword)) {
-            etConfirmPassword.setError("Mật khẩu xác nhận không khớp");
-            return false;
-        }
-        return true;
+private void registerUser() {
+    String username = etUsername.getText().toString().trim();
+    String email = etEmail.getText().toString().trim();
+    String password = etPassword.getText().toString().trim();
+    String confirmPassword = etConfirmPassword.getText().toString().trim();
+
+    // Validate inputs
+    if (username.isEmpty()) {
+        etUsername.setError("Username is required");
+        etUsername.requestFocus();
+        return;
+    }
+    if (email.isEmpty()) {
+        etEmail.setError("Email is required");
+        etEmail.requestFocus();
+        return;
+    }
+    if (password.isEmpty()) {
+        etPassword.setError("Password is required");
+        etPassword.requestFocus();
+        return;
+    }
+    if (!password.equals(confirmPassword)) {
+        etConfirmPassword.setError("Passwords do not match");
+        etConfirmPassword.requestFocus();
+        return;
     }
 
-    private void registerUser(String username, String email, String password) {
-        auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser user = auth.getCurrentUser();
-                        Toast.makeText(RegisterActivity.this, "Đăng ký thành công: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//                        saveUserInfoToFirestore(user.getUid(), username, email);
-                    } else {
-                        Toast.makeText(RegisterActivity.this, "Đăng ký thất bại: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
+    // Create user with Firebase Auth
+    auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    // Get the user ID
+                    String userId = auth.getCurrentUser().getUid();
 
-//    private void saveUserInfoToFirestore(String uid, String username, String email) {
-//        // Tạo đối tượng người dùng
-//        Map<String, Object> user = new HashMap<>();
-//        user.put("username", username);
-//        user.put("email", email);
-//
-//        // Lưu thông tin vào Firestore
-//        db.collection("users").document(uid).set(user)
-//                .addOnSuccessListener(aVoid -> {
-//                    Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-//                    // Điều hướng người dùng tới màn hình chính hoặc màn hình đăng nhập
-//                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-//                     finish();
-//                })
-//                .addOnFailureListener(e -> {
-//                    Toast.makeText(RegisterActivity.this, "Lỗi khi lưu thông tin người dùng: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                });
-//    }
+                    // Create user object
+                    Map<String, Object> user = new HashMap<>();
+                    user.put("userId", userId);
+                    user.put("username", username);
+                    user.put("email", email);
+
+                    // Save user data to Firestore
+                    db.collection("users").document(userId).set(user)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(RegisterActivity.this, "Đăng kí thành công", Toast.LENGTH_SHORT).show();
+                                // Navigate to another screen or finish
+                                finish();
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(RegisterActivity.this, "Lỗi khi lưu thông tin người dùng: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
+                } else {
+                    Toast.makeText(RegisterActivity.this, "Đăng kí thất bại: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+}
 }
