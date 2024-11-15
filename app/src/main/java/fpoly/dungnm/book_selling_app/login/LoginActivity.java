@@ -58,14 +58,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // Xử lý sự kiện cho TextView "Quên mật khẩu"
-//        tvForgotPassword.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Chuyển đến màn hình quên mật khẩu
-//                startActivity(new Intent(LoginActivity.this, .class));
-//            }
-//        });
 
         // Xử lý sự kiện cho TextView "Đăng ký"
         tvSignUp.setOnClickListener(new View.OnClickListener() {
@@ -113,7 +105,6 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             startActivity(intent);
                             finish();
-
                         }
                     } else {
                         // Đăng nhập thất bại

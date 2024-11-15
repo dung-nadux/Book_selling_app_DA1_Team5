@@ -26,6 +26,17 @@ public class DBHelper extends SQLiteOpenHelper {
                 ");";
         db.execSQL(createTable);
 
+        String createTableCart = "CREATE TABLE CART(" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "image BLOB, " +
+                "title TEXT, " +
+                "author TEXT, " +
+                "price INTEGER, " +
+                "description TEXT, " +
+                "category TEXT" +
+                ");";
+        db.execSQL(createTableCart);
+
         // Chèn các giá trị mẫu vào bảng book
 //        String insertSampleData = "INSERT INTO PRODUCTS(image, title, author, price, description, category) VALUES " +
 //                "( 'image1.png', 'Learning Java', 'Author A', 100, 'Java basics', 'Education'), " +
@@ -39,6 +50,10 @@ public class DBHelper extends SQLiteOpenHelper {
         // Xóa bảng nếu đã tồn tại và tạo lại
         String dropTable = "DROP TABLE IF EXISTS PRODUCTS";
         db.execSQL(dropTable);
+
+        String dropTable1 = "DROP TABLE IF EXISTS CART";
+        db.execSQL(dropTable1);
+
         onCreate(db);
     }
 }

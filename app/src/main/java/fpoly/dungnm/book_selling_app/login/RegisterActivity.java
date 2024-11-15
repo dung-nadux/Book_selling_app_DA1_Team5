@@ -92,29 +92,30 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = auth.getCurrentUser();
-                        saveUserInfoToFirestore(user.getUid(), username, email);
+                        Toast.makeText(RegisterActivity.this, "Đăng ký thành công: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                        saveUserInfoToFirestore(user.getUid(), username, email);
                     } else {
                         Toast.makeText(RegisterActivity.this, "Đăng ký thất bại: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void saveUserInfoToFirestore(String uid, String username, String email) {
-        // Tạo đối tượng người dùng
-        Map<String, Object> user = new HashMap<>();
-        user.put("username", username);
-        user.put("email", email);
-
-        // Lưu thông tin vào Firestore
-        db.collection("users").document(uid).set(user)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-                    // Điều hướng người dùng tới màn hình chính hoặc màn hình đăng nhập
-                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                     finish();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(RegisterActivity.this, "Lỗi khi lưu thông tin người dùng: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-    }
+//    private void saveUserInfoToFirestore(String uid, String username, String email) {
+//        // Tạo đối tượng người dùng
+//        Map<String, Object> user = new HashMap<>();
+//        user.put("username", username);
+//        user.put("email", email);
+//
+//        // Lưu thông tin vào Firestore
+//        db.collection("users").document(uid).set(user)
+//                .addOnSuccessListener(aVoid -> {
+//                    Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+//                    // Điều hướng người dùng tới màn hình chính hoặc màn hình đăng nhập
+//                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+//                     finish();
+//                })
+//                .addOnFailureListener(e -> {
+//                    Toast.makeText(RegisterActivity.this, "Lỗi khi lưu thông tin người dùng: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                });
+//    }
 }
