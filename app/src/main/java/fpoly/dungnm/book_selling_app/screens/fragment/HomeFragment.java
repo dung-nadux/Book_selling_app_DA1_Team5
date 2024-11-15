@@ -2,8 +2,10 @@ package fpoly.dungnm.book_selling_app.screens.fragment;
 
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,12 +28,11 @@ import fpoly.dungnm.book_selling_app.adapter.AdapterProducts;
 import fpoly.dungnm.book_selling_app.models.ModelProducts;
 
 
-public class HomeFragment extends Fragment implements Filterable {
+public class HomeFragment extends Fragment  {
     RecyclerView rcvHome;
     AdapterHomeProducts adapter;
     ArrayList<ModelProducts> listProducts = new ArrayList<>();
     ProductDAO productDAO;
-    private List<ModelProducts> filteredProducts; // Danh sách sản phẩm đã lọc
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,19 +51,6 @@ public class HomeFragment extends Fragment implements Filterable {
         listProducts = productDAO.getAllProducts();
         filteredProducts = new ArrayList<>(listProducts); // Khởi tạo danh sách đã lọc
 
-//        // Thiết lập RecyclerView
-//        // Thiết lập RecyclerView với GridLayoutManager
-//        GridLayoutManager manager = new GridLayoutManager(getContext(), 2); // Số 2 là số cột
-//        rcvHome.setLayoutManager(manager);
-//
-//        // adapter = new AdapterProducts(getContext(), listProducts);
-//         adapter = new AdapterProducts(getContext(), (ArrayList<ModelProducts>) filteredProducts);
-//
-//        rcvHome.setAdapter(adapter);
-//
-//        productDAO = new ProductDAO(getContext());
-//        listProducts = productDAO.getAllProducts();
-
         // Thiết lập RecyclerView
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(RecyclerView.HORIZONTAL);
@@ -71,60 +59,25 @@ public class HomeFragment extends Fragment implements Filterable {
         adapter = new AdapterHomeProducts(getContext(), listProducts);
 
         rcvHome.setAdapter(adapter);
+
+        dialogAskExit();
     }
 
-    // Phương thức filter để lọc danh sách sản phẩm
-    public void filter(String text) {
-        filteredProducts.clear();
-        if (text.isEmpty()) {
-            filteredProducts.addAll(listProducts); // Nếu không có văn bản tìm kiếm, hiển thị tất cả
-        } else {
-            text = text.toLowerCase();
-            for (ModelProducts product : listProducts) {
-                if (product.getTitle().toLowerCase().contains(text) || product.getCategory().toLowerCase().contains(text)) { // Giả sử bạn có phương thức getTitle() trong ModelProducts
-                    filteredProducts.add(product);
-                }
-            }
-        }
-        adapter.notifyDataSetChanged(); // Cập nhật adapter
-    }
-
-    @Override
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                FilterResults results = new FilterResults();
-                List<ModelProducts> filteredList = new ArrayList<>();
-
-                if (constraint == null || constraint.length() == 0) {
-                    filteredList.addAll(listProducts);
-                } else {
-                    String filterPattern = constraint.toString().toLowerCase().trim();
-                    for (ModelProducts product : listProducts) {
-                        if (product.getTitle().toLowerCase().contains(filterPattern)) {
-                            filteredList.add(product);
-                        }
+    private void dialogAskExit() {
+        // Xử lý sự kiện khi nhấn nút "Back"
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        // Hiển thị dialog xác nhận thoát
+                        new AlertDialog.Builder(requireContext())
+                                .setTitle("Thoát ứng dụng")
+                                .setMessage("Bạn có chắc chắn muốn thoát không?")
+                                .setPositiveButton("Có", (dialog, which) -> requireActivity().finish())
+                                .setNegativeButton("Không", (dialog, which) -> dialog.dismiss())
+                                .show();
                     }
-                }
-
-                results.values = filteredList;
-                results.count = filteredList.size();
-                return results;
-            }
-
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                filteredProducts.clear();
-                filteredProducts.addAll((List<ModelProducts>) results.values);
-                adapter.notifyDataSetChanged(); // Cập nhật adapter
-            }
-        };
+                });
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Toast.makeText(getContext(), "DIstroy home", Toast.LENGTH_SHORT).show();
-    }
 }

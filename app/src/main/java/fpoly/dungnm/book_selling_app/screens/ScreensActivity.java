@@ -30,6 +30,7 @@ import fpoly.dungnm.book_selling_app.screens.fragment.HomeFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.OrderFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.ProductFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.ProfileFragment;
+import fpoly.dungnm.book_selling_app.screens.fragment.SettingsFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.UserFragment;
 
 public class ScreensActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -120,6 +121,9 @@ public class ScreensActivity extends AppCompatActivity implements NavigationView
                 fragment = new ProductFragment();
             } else if (id == R.id.nav_alalytics) {
                 fragment = new AnalytistFragment();
+            }else if (id == R.id.nav_setting) {
+                toolbar.setVisibility(View.VISIBLE);
+                fragment = new SettingsFragment();
             }
             else if (id == R.id.nav_logout) {
                 startActivity(new Intent(this, LoginActivity.class));
