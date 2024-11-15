@@ -14,6 +14,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import fpoly.dungnm.book_selling_app.DAO.CartDAO;
 import fpoly.dungnm.book_selling_app.DAO.ProductDAO;
 import fpoly.dungnm.book_selling_app.R;
 import fpoly.dungnm.book_selling_app.models.ModelProducts;
@@ -22,6 +23,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
 ImageView imgBack1, book_image;
 TextView book_title,book_price,book_description, tvCategory, tvAuthor;
 Button btn_add_to_cart;
+CartDAO cartDAO;
+    ModelProducts product;
+    ProductDAO productDAO;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +44,11 @@ Button btn_add_to_cart;
         tvCategory = findViewById(R.id.tvCategory);
         btn_add_to_cart = findViewById(R.id.btn_add_to_cart);
         tvAuthor = findViewById(R.id.tvAuthor);
+
+        cartDAO = new CartDAO(this);
+        product = new ModelProducts();
+        productDAO = new ProductDAO(this);
+
 
         // Nhận dữ liệu từ Intent
 //        String productId = getIntent().getStringExtra("productId");
@@ -83,8 +92,7 @@ Button btn_add_to_cart;
 
         // Kiểm tra productId và lấy dữ liệu từ CSDL
         if (productId != -1) {
-            ProductDAO productDAO = new ProductDAO(this);
-            ModelProducts product = productDAO.getProductById(productId);
+            product = productDAO.getProductById(productId);
 
             if (product != null) {
                 // Hiển thị dữ liệu lên giao diện
@@ -104,5 +112,18 @@ Button btn_add_to_cart;
                 }
             }
         }
+
+        btn_add_to_cart.setOnClickListener(v -> {
+            if (product != null) {
+                boolean check = cartDAO.insertCart(product);
+                if (check) {
+                    Toast.makeText(this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Thêm vào giỏ hàng thất bại", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Sản phẩm không tồn tại", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

@@ -10,6 +10,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -22,6 +23,7 @@ public class ProductFragment extends Fragment {
     TabLayout tabLayout;
     ViewPager2 viewPager2;
     TabChuyenman tabChuyenman;
+    ImageView imgBackProduct;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class ProductFragment extends Fragment {
 
         tabLayout = view.findViewById(R.id.tabLayout);
         viewPager2 = view.findViewById(R.id.viewPager2);
+        imgBackProduct = view.findViewById(R.id.imgBackProduct);
 
         tabChuyenman = new TabChuyenman(getActivity());
         viewPager2.setAdapter(tabChuyenman);
@@ -42,5 +45,9 @@ public class ProductFragment extends Fragment {
         new TabLayoutMediator(tabLayout, viewPager2, (tab, i) -> {
             tab.setText(TabChuyenman.item[i]);
         }).attach();
+
+        imgBackProduct.setOnClickListener(v -> {
+            getActivity().onBackPressed();
+        });
     }
 }

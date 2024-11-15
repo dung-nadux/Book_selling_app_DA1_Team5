@@ -91,10 +91,10 @@ public class SearchActivity extends AppCompatActivity implements Filterable {
          });
 
 // nhấn button để tìm kiếm
-//        btnSearch.setOnClickListener(v -> {
-//        String searchText = edSearch.getEditText().getText().toString();
-//        getFilter().filter(searchText); // Kích hoạt bộ lọc khi nhấn nút
-//    });
+        btnSearch.setOnClickListener(v -> {
+        String searchText = edSearch.getEditText().getText().toString();
+        getFilter().filter(searchText); // Kích hoạt bộ lọc khi nhấn nút
+    });
 
     }
 
