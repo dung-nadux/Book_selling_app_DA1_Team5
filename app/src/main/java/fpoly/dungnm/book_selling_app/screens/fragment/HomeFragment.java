@@ -49,7 +49,6 @@ public class HomeFragment extends Fragment  {
 
         productDAO = new ProductDAO(getContext());
         listProducts = productDAO.getAllProducts();
-        filteredProducts = new ArrayList<>(listProducts); // Khởi tạo danh sách đã lọc
 
         // Thiết lập RecyclerView
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
