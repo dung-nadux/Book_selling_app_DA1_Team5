@@ -11,8 +11,7 @@
         android:layout_marginTop="30sp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
@@ -23,40 +22,36 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
-                android:theme="@style/ThemeOverlay.AppCompat.Light"
-                >
+                android:theme="@style/ThemeOverlay.AppCompat.Light">
 
                 <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <EditText
                         android:id="@+id/edSearchClick"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:layout_centerInParent="true"
-                        android:layout_toLeftOf="@id/imgSearch"
-                        android:layout_toStartOf="@id/imgSearch"
                         android:layout_marginEnd="8dp"
+                        android:layout_toStartOf="@id/imgNotification"
+                        android:layout_toLeftOf="@id/imgNotification"
                         android:background="@drawable/custom_search"
-                        android:layout_weight="1"
-                        android:hint="Tìm kiếm"
+                        android:clickable="true"
                         android:drawableStart="@drawable/search"
+                        android:paddingLeft="10dp"
                         android:drawablePadding="10dp"
                         android:focusable="false"
-                        android:clickable="true"
-                        />
+                        android:hint="Tìm kiếm" />
 
-                    <ImageView
-                        android:id="@+id/imgSearch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/notifine"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="20dp"/>
-
-            </RelativeLayout>
+                        <ImageView
+                            android:id="@+id/imgNotification"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/notifine"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="20dp"/>
+                </RelativeLayout>
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -66,8 +61,7 @@
         <FrameLayout
             android:id="@+id/frContent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
@@ -77,7 +71,6 @@
         android:layout_height="match_parent"
         app:headerLayout="@layout/header_nav"
         app:menu="@menu/menu_navi"
-        android:layout_gravity="start"
-        />
+        android:layout_gravity="start" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

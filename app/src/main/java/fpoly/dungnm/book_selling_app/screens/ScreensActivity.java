@@ -27,6 +27,7 @@ import fpoly.dungnm.book_selling_app.pages.search.SearchActivity;
 import fpoly.dungnm.book_selling_app.screens.fragment.AnalytistFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.CartFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.HomeFragment;
+import fpoly.dungnm.book_selling_app.screens.fragment.NotificationFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.OrderFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.ProductFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.ProfileFragment;
@@ -36,7 +37,7 @@ import fpoly.dungnm.book_selling_app.screens.fragment.UserFragment;
 public class ScreensActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     DrawerLayout drawerLayout;
     Toolbar toolbar;
-    ImageView imgSearch;
+    ImageView imgNotification;;
     EditText edSearchClick;
 
     @Override
@@ -47,7 +48,7 @@ public class ScreensActivity extends AppCompatActivity implements NavigationView
 
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawer_layout);
-        imgSearch = findViewById(R.id.imgSearch);
+        imgNotification = findViewById(R.id.imgNotification);
         edSearchClick = findViewById(R.id.edSearchClick);
         NavigationView navigationView = findViewById(R.id.navigation_view);
 
@@ -83,9 +84,23 @@ public class ScreensActivity extends AppCompatActivity implements NavigationView
             Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frContent);
             if (currentFragment instanceof HomeFragment ) {
                 toolbar.setVisibility(View.VISIBLE);
-                imgSearch.setVisibility(View.VISIBLE);
+                imgNotification.setVisibility(View.VISIBLE);
             } else {
                 toolbar.setVisibility(View.GONE);
+            }
+        });
+
+        imgNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NotificationFragment fragment1 = null;
+                FragmentManager manager = getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                fragment1 = new NotificationFragment();
+                transaction.replace(R.id.frContent, fragment1);
+                transaction.addToBackStack("HomeFragment");
+                transaction.commit();
+                drawerLayout.closeDrawers();
             }
         });
 
@@ -104,7 +119,7 @@ public class ScreensActivity extends AppCompatActivity implements NavigationView
         int id = menuItem.getItemId();
         if (id == R.id.nav_home) {
             fragment = new HomeFragment();
-            imgSearch.setVisibility(View.VISIBLE); // Show SearchView
+            imgNotification.setVisibility(View.VISIBLE); // Show SearchView
         } else {
             // Other fragments
             if(id ==R.id.nav_cart){
@@ -128,7 +143,7 @@ public class ScreensActivity extends AppCompatActivity implements NavigationView
             else if (id == R.id.nav_logout) {
                 startActivity(new Intent(this, LoginActivity.class));
             }
-            imgSearch.setVisibility(View.GONE); // Hide SearchView
+            imgNotification.setVisibility(View.GONE); // Hide SearchView
 
         }
 
