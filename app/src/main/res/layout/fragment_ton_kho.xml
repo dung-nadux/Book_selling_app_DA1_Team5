@@ -60,7 +60,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tồn kho: 200" />
+                    android:text="Tồn kho: 200"
+                    android:textColor="#FF0000"
+                    />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -100,7 +102,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tồn kho: 250" />
+                    android:text="Tồn kho: 250"
+                    android:textColor="#FF0000"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -140,7 +143,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tồn kho: 400" />
+                    android:text="Tồn kho: 400"
+                    android:textColor="#FF0000"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -180,7 +184,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tồn kho: 500" />
+                    android:text="Tồn kho: 500"
+                    android:textColor="#FF0000"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

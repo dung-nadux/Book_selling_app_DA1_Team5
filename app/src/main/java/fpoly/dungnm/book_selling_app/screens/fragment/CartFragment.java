@@ -26,7 +26,7 @@ public class CartFragment extends Fragment {
     RecyclerView recyclerView;
     AdapterProducts adapter;
     ArrayList<ModelProducts> listCart = new ArrayList<>();
-    ImageView ivImage;
+    ImageView imgBackCart;
     CartDAO cartDAO;
 
     @Override
@@ -41,6 +41,7 @@ public class CartFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         recyclerView = view.findViewById(R.id.recyclerViewCart);
+        imgBackCart = view.findViewById(R.id.imgBackCart);
 
         cartDAO = new CartDAO(getContext());
         listCart = cartDAO.getAllCart();
@@ -53,5 +54,9 @@ public class CartFragment extends Fragment {
         adapter = new AdapterProducts(getContext(), listCart);
 
         recyclerView.setAdapter(adapter);
+
+        imgBackCart.setOnClickListener(v -> {
+            getActivity().onBackPressed();
+        });
     }
 }

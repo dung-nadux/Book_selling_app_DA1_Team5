@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -24,6 +25,7 @@ import com.google.android.material.navigation.NavigationView;
 import fpoly.dungnm.book_selling_app.R;
 import fpoly.dungnm.book_selling_app.login.LoginActivity;
 import fpoly.dungnm.book_selling_app.pages.search.SearchActivity;
+import fpoly.dungnm.book_selling_app.screens.fragment.AbouUsFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.AnalytistFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.CartFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.HomeFragment;
@@ -32,6 +34,7 @@ import fpoly.dungnm.book_selling_app.screens.fragment.OrderFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.ProductFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.ProfileFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.SettingsFragment;
+import fpoly.dungnm.book_selling_app.screens.fragment.SupportFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.UserFragment;
 
 public class ScreensActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -124,8 +127,7 @@ public class ScreensActivity extends AppCompatActivity implements NavigationView
             // Other fragments
             if(id ==R.id.nav_cart){
                 fragment = new CartFragment();
-            }
-            else if (id == R.id.nav_order) {
+            }else if (id == R.id.nav_order) {
                 fragment = new OrderFragment();
             } else if (id == R.id.nav_profile) {
                 toolbar.setVisibility(View.GONE);
@@ -139,18 +141,44 @@ public class ScreensActivity extends AppCompatActivity implements NavigationView
             }else if (id == R.id.nav_setting) {
                 toolbar.setVisibility(View.VISIBLE);
                 fragment = new SettingsFragment();
-            }
-            else if (id == R.id.nav_logout) {
-                startActivity(new Intent(this, LoginActivity.class));
+            }else if (id == R.id.nav_support) {
+                fragment = new SupportFragment();
+            }else if (id == R.id.nav_aboutus) {
+                fragment = new AbouUsFragment();
+            }else if (id == R.id.nav_logout) {
+                // Hiển thị hộp thoại xác nhận
+                new AlertDialog.Builder(this)
+                        .setTitle("Đăng xuất")
+                        .setMessage("Bạn có chắc chắn muốn thoát không?")
+                        .setPositiveButton("Có", (dialog, which) -> {
+                            // Chuyển sang màn hình LoginActivity
+                            startActivity(new Intent(this, LoginActivity.class));
+                            finish(); // Kết thúc activity hiện tại nếu cần
+                        })
+                        .setNegativeButton("Không", (dialog, which) -> {
+                            // Đóng dialog nếu người dùng chọn "Không"
+                            dialog.dismiss();
+                        })
+                        .show();
+                drawerLayout.closeDrawers();
+                return true; // Kết thúc ngay tại đây để không thực hiện giao dịch fragment
             }
             imgNotification.setVisibility(View.GONE); // Hide SearchView
 
         }
 
         // Đóng ngăn kéo sau khi chọn mục
-        transaction.replace(R.id.frContent, fragment);
-        transaction.addToBackStack("HomeFragment");
-        transaction.commit();
+//        transaction.replace(R.id.frContent, fragment);
+//        transaction.addToBackStack("HomeFragment");
+//        transaction.commit();
+
+        // Chỉ thực hiện giao dịch nếu fragment không bị null
+        if (fragment != null) {
+            transaction.replace(R.id.frContent, fragment);
+            transaction.addToBackStack("HomeFragment");
+            transaction.commit();
+        }
+
         drawerLayout.closeDrawers();
         return true;
     }
