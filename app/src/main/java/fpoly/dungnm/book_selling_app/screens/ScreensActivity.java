@@ -110,7 +110,6 @@ public class ScreensActivity extends AppCompatActivity implements NavigationView
         edSearchClick.setOnClickListener(v -> {
             startActivity(new Intent(this, SearchActivity.class));
         });
-
     }
 
     @Override

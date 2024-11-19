@@ -1,5 +1,7 @@
 package fpoly.dungnm.book_selling_app.adapter;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,10 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -22,6 +26,7 @@ import fpoly.dungnm.book_selling_app.DAO.CartDAO;
 import fpoly.dungnm.book_selling_app.DAO.ProductDAO;
 import fpoly.dungnm.book_selling_app.R;
 import fpoly.dungnm.book_selling_app.models.ModelProducts;
+import fpoly.dungnm.book_selling_app.pages.order_payment.OrderPaymentActivity;
 import fpoly.dungnm.book_selling_app.pages.productdetail.ProductDetailsActivity;
 
 public class AdapterCart extends RecyclerView.Adapter<AdapterCart.ViewHoder> {
@@ -59,10 +64,9 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.ViewHoder> {
             // Hiển thị ảnh mặc định nếu không có ảnh
             holder.imgCartProduct.setImageResource(R.drawable.ic_launcher_background); // Ví dụ: ảnh mặc định
         }
-
-
         holder.tvCartTitle.setText(product.getTitle());
         holder.tvCartPrice.setText(String.valueOf(product.getPrice()));
+        holder.tvCartQuantity.setText(String.valueOf(product.getQuantity()));
 //        holder.tvCartQuantity.setText(product.getCategory());
 
         // Nếu có URL ảnh, bạn có thể sử dụng Glide hoặc Picasso để tải ảnh từ URL
@@ -77,6 +81,72 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.ViewHoder> {
             context.startActivity(intent);
         });
 
+        // Xóa sản phẩm khỏi giỏ hàng
+        holder.imgDeleteProduct.setOnClickListener(v -> {
+            new AlertDialog.Builder(context)
+                    .setTitle("Bạn có muốn xóa sản phẩm này không?")
+                    .setPositiveButton("Có", (dialog, which) -> {
+                        cartDAO.deleteCart(product.getId());
+                        list.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, list.size());
+                            })
+                    .setNegativeButton("Không", (dialog, which) -> {
+                        dialog.dismiss();
+                    })
+                    .create().show();
+        });
+
+//         Thêm sự kiện cho checkbox
+        holder.cbCheck.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            product.setSelected(isChecked); // Cập nhật trạng thái đã chọn
+        });
+        
+        // Ensure the checkbox reflects the current state
+        holder.cbCheck.setChecked(product.isSelected());
+
+        // btnSendSelectedProducts.setOnClickListener(v -> {
+        //     ArrayList<Integer> selectedIds = new ArrayList<>();
+
+        //     for (ModelProducts product : list) {
+        //         if (product.isSelected()) { // Kiểm tra sản phẩm nào được tích
+        //             selectedIds.add(product.getId());
+        //         }
+        //     }
+
+        //     // Chuyển danh sách ID sang màn khác bằng Intent
+        //     Intent intent = new Intent(context, OrderPaymentActivity.class);
+        //     intent.putExtra("selectedIds", selectedIds);
+        //     startActivity(intent);
+        // });
+
+
+        // Cập nhật số lượng từ đối tượng sản phẩm
+        holder.tvCartQuantity.setText(String.valueOf(product.getQuantity()));
+
+        // Xử lý sự kiện khi nhấn nút +
+        holder.btnIncrease.setOnClickListener(v -> {
+            int quantity = product.getQuantity();
+            product.setQuantity(quantity + 1); // Tăng số lượng
+            holder.tvCartQuantity.setText(String.valueOf(product.getQuantity())); // Cập nhật giao diện
+
+            // Cập nhật vào cơ sở dữ liệu nếu cần
+            cartDAO.updateQuantity(product.getId(), quantity); // Giả sử bạn có phương thức này trong CartDAO
+        });
+
+        // Xử lý sự kiện khi nhấn nút -
+        holder.btnDecrease.setOnClickListener(v -> {
+            int quantity = product.getQuantity();
+            if (quantity > 1) {
+                product.setQuantity(quantity - 1); // Giảm số lượng
+                holder.tvCartQuantity.setText(String.valueOf(product.getQuantity())); // Cập nhật giao diện
+
+                // Cập nhật vào cơ sở dữ liệu nếu cần
+                cartDAO.updateQuantity(product.getId(), quantity); // Giả sử bạn có phương thức này trong CartDAO
+            }
+        });
+
+
     }
 
     @Override
@@ -88,9 +158,10 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.ViewHoder> {
     }
 
     public static class ViewHoder extends RecyclerView.ViewHolder {
-        ImageView imgCartProduct;
-        TextView tvCartTitle,tvCartPrice,tvCartQuantity;
+        ImageView imgCartProduct, imgDeleteProduct;
+        TextView tvCartTitle, tvCartPrice, tvCartQuantity;
         CheckBox cbCheck;
+        ImageButton btnDecrease, btnIncrease;
 
         public ViewHoder(@NonNull View itemView) {
             super(itemView);
@@ -99,6 +170,9 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.ViewHoder> {
             tvCartPrice = itemView.findViewById(R.id.tvCartPrice);
             tvCartQuantity = itemView.findViewById(R.id.tvCartQuantity);
             cbCheck = itemView.findViewById(R.id.cbCheck);
+            btnDecrease = itemView.findViewById(R.id.btnDecrease);
+            btnIncrease = itemView.findViewById(R.id.btnIncrease);
+            imgDeleteProduct = itemView.findViewById(R.id.imgDeleteProduct);
         }
     }
 }

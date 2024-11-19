@@ -115,7 +115,7 @@ CartDAO cartDAO;
 
         btn_add_to_cart.setOnClickListener(v -> {
             if (product != null) {
-                boolean check = cartDAO.insertCart(product);
+                boolean check = cartDAO.insertOrUpdateCart(product);
                 if (check) {
                     Toast.makeText(this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
                 } else {

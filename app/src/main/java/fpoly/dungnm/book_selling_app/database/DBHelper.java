@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 public class DBHelper extends SQLiteOpenHelper {
 
     public DBHelper(@Nullable Context context) {
-        super(context, "DBBookInfo", null, 1);
+        super(context, "DBBookInfo", null, 2);
     }
 
     @Override
@@ -22,7 +22,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "author TEXT, " +
                 "price INTEGER, " +
                 "description TEXT, " +
-                "category TEXT" +
+                "category TEXT," +
+                "quantity INTEGER DEFAULT 1" +
                 ");";
         db.execSQL(createTable);
 
@@ -33,16 +34,18 @@ public class DBHelper extends SQLiteOpenHelper {
                 "author TEXT, " +
                 "price INTEGER, " +
                 "description TEXT, " +
-                "category TEXT" +
+                "category TEXT," +
+                "quantity INTEGER DEFAULT 1" +
                 ");";
         db.execSQL(createTableCart);
 
-        // Chèn các giá trị mẫu vào bảng book
-//        String insertSampleData = "INSERT INTO PRODUCTS(image, title, author, price, description, category) VALUES " +
-//                "( 'image1.png', 'Learning Java', 'Author A', 100, 'Java basics', 'Education'), " +
-//                "( 'image2.png', 'Learning C++', 'Author B', 150, 'C++ basics', 'Education'), " +
-//                "('image3.png', 'Learning Python', 'Author C', 120, 'Python basics', 'Education');";
-//        db.execSQL(insertSampleData);
+        String createTableAdress = "CREATE TABLE ADDRESS(" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "receive TEXT, "+
+                "adress TEXT " +
+                ");";
+        db.execSQL(createTableAdress);
+
     }
 
     @Override

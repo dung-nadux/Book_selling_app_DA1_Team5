@@ -1,6 +1,7 @@
 package fpoly.dungnm.book_selling_app.login;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -103,6 +104,11 @@ public class LoginActivity extends AppCompatActivity {
                                 checkRole = "0";
                                 intent.putExtra("role",checkRole );
                             }
+
+                            SharedPreferences preferences = getSharedPreferences("CHECK_LOGIN", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("EMAIL",email);
+                            editor.apply();
                             startActivity(intent);
                             finish();
                         }

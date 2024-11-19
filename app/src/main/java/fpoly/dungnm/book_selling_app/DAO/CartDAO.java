@@ -35,7 +35,8 @@ public class CartDAO {
                         cursor.getString(3),   // author
                         cursor.getInt(4),      // price
                         cursor.getString(5),   // description
-                        cursor.getString(6)    // category
+                        cursor.getString(6),   // category
+                        cursor.getInt(7)       // quantity
                 ));
             } while (cursor.moveToNext());
         }
@@ -44,15 +45,40 @@ public class CartDAO {
     }
 
     // Thêm sản phẩm mới
-    public boolean insertCart(ModelProducts product) {
+//     public boolean insertCart(ModelProducts product) {
+//         ContentValues values = new ContentValues();
+// //        values.put("id", product.getId()); // Đảm bảo rằng bạn đã có trường id trong database
+//         values.put("image", product.getImage());  // Chuyển ảnh vào BLOB
+//         values.put("title", product.getTitle());
+//         values.put("author", product.getAuthor());
+//         values.put("price", product.getPrice());
+//         values.put("description", product.getDescription());
+//         values.put("category", product.getCategory());
+//         long result = database.insert("CART", null, values);
+//         if (result == -1) {
+//             Log.e("CartDAO", "Lỗi khi thêm sản phẩm vào giỏ hàng");
+//             return false;
+//         }
+//         return true;
+//     }
+public boolean insertOrUpdateCart(ModelProducts product) {
+    // Check if the product already exists in the cart
+    ModelProducts existingProduct = getCartById(product.getId());
+    if (existingProduct != null) {
+        // If it exists, update the quantity
+        int newQuantity = existingProduct.getQuantity() + product.getQuantity();
+        return updateQuantity(product.getId(), newQuantity);
+    } else {
+        // If it doesn't exist, insert the new product
         ContentValues values = new ContentValues();
-//        values.put("id", product.getId()); // Đảm bảo rằng bạn đã có trường id trong database
-        values.put("image", product.getImage());  // Chuyển ảnh vào BLOB
+        values.put("image", product.getImage());
         values.put("title", product.getTitle());
         values.put("author", product.getAuthor());
         values.put("price", product.getPrice());
         values.put("description", product.getDescription());
         values.put("category", product.getCategory());
+        values.put("quantity", product.getQuantity());
+
         long result = database.insert("CART", null, values);
         if (result == -1) {
             Log.e("CartDAO", "Lỗi khi thêm sản phẩm vào giỏ hàng");
@@ -60,6 +86,15 @@ public class CartDAO {
         }
         return true;
     }
+}
+
+public boolean updateQuantity(int productId, int quantity) {
+    ContentValues values = new ContentValues();
+    values.put("quantity", quantity); // Update the quantity
+
+    int result = database.update("CART", values, "id = ?", new String[]{String.valueOf(productId)});
+    return result > 0;
+}
 
 
     // Cập nhật thông tin sản phẩm
