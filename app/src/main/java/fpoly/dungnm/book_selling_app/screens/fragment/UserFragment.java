@@ -26,6 +26,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import fpoly.dungnm.book_selling_app.DAO.UserDAO;
 import fpoly.dungnm.book_selling_app.R;
 import fpoly.dungnm.book_selling_app.adapter.AdapterUser;
 import fpoly.dungnm.book_selling_app.models.ModelProducts;
@@ -40,6 +41,7 @@ public class UserFragment extends Fragment {
     TextInputLayout edSearchUser;
     ImageView imgBackUser;
     private ArrayList<ModelUser> filteredUserList;
+    private UserDAO userDAO;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,8 +68,7 @@ public class UserFragment extends Fragment {
         userAdapter = new AdapterUser(getContext(),userList);
         rvUser.setAdapter(userAdapter);
 
-        db = FirebaseFirestore.getInstance();
-//        loadUsersFromFirestore();
+        loadUsersFromDatabase();
 
         imgBackUser.setOnClickListener(v -> {
             getActivity().onBackPressed();
@@ -96,24 +97,15 @@ public class UserFragment extends Fragment {
 
     }
 
-//    private void loadUsersFromFirestore() {
-//        db.collection("users")
-//                .get()
-//                .addOnCompleteListener(task -> {
-//                    if (task.isSuccessful()) {
-//                        userList.clear();
-//                        for (QueryDocumentSnapshot document : task.getResult()) {
-//                            ModelUser user = document.toObject(ModelUser.class);
-//                            user.setId(document.getId());
-//                            userList.add(user);
-//
-//                        }
-//                        userAdapter.notifyDataSetChanged();
-//                    } else {
-//                        Toast.makeText(getContext(), "Lỗi khi tải danh sách người dùng", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
+    private void loadUsersFromDatabase() {
+        userDAO = new UserDAO(getContext());
+        if (userDAO.getAllUsers() != null) {
+            userList.clear();
+            userList.addAll(userDAO.getAllUsers());
+            userAdapter.notifyDataSetChanged();
+        }
+    }
+
     // Lắng nghe sự kiện nhập liệu từ ô tìm kiếm và tìm kiếm trực tiếp , tự động
 
     private void filterUsers(String query) {

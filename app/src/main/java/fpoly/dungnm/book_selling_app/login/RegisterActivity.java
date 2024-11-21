@@ -79,6 +79,12 @@ public class RegisterActivity extends AppCompatActivity {
             edtEmail.requestFocus();
             return;
         }
+        // Kiểm tra nếu email không hợp lệ
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            edtEmail.setError("Email không hợp lệ");
+            edtEmail.requestFocus();
+            return;
+        }
         if (password.isEmpty()) {
             edtPassword.setError("Mật khẩu không được để trống");
             edtPassword.requestFocus();
@@ -93,16 +99,18 @@ public class RegisterActivity extends AppCompatActivity {
             edtPhone.setError("Số điện thoại không được để trống");
             edtPhone.requestFocus();
             return;
-        } else if (phone.length() != 10) {
+        }
+        if (phone.length() != 10) {
             edtPhone.setError("Số điện thoại phải có 10 chữ số");
             edtPhone.requestFocus();
             return;
-        } else {
+        }else {
             try {
                 Integer.parseInt(phone);
             } catch (NumberFormatException e) {
                 edtPhone.setError("Số điện thoại phải là số");
                 edtPhone.requestFocus();
+                return;
             }
             if (address.isEmpty()) {
                 edtAddress.setError("Địa chỉ không được để trống");
@@ -127,8 +135,6 @@ public class RegisterActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Đăng ký thất bại", Toast.LENGTH_SHORT).show();
             }
-
-
         }
     }
 }
