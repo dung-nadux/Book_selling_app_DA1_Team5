@@ -19,15 +19,16 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import fpoly.dungnm.book_selling_app.DAO.UserDAO;
 import fpoly.dungnm.book_selling_app.R;
+import fpoly.dungnm.book_selling_app.models.ModelUser;
 import fpoly.dungnm.book_selling_app.screens.ScreensActivity;
 
 public class LoginActivity extends AppCompatActivity {
-    private TextInputEditText etEmail, etPassword;
+    private TextInputEditText edtEmail, edtPassword;
     private Button btnLogin;
-    private TextView tvForgotPassword, tvSignUp;
-
-    private FirebaseAuth mAuth;
+    private TextView tvSignUp;
+    private UserDAO userDAO;
     String checkRole = "0";
 
     @Override
@@ -42,14 +43,11 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         // Ánh xạ các view
-        etEmail = findViewById(R.id.etEmail);
-        etPassword = findViewById(R.id.etPassword);
+        edtEmail = findViewById(R.id.etEmail);
+        edtPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
-        tvForgotPassword = findViewById(R.id.tvForgotPassword);
         tvSignUp = findViewById(R.id.tvSignUp);
 
-        // Khởi tạo Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
 
         // Xử lý sự kiện cho nút đăng nhập
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -71,52 +69,52 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser() {
-        String email = etEmail.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
+        String email = edtEmail.getText().toString().trim();
+        String password = edtPassword.getText().toString().trim();
 
         // Kiểm tra nếu email hoặc password để trống
         if (TextUtils.isEmpty(email)) {
-            etEmail.setError("Email không được để trống");
-            etEmail.requestFocus();
+            edtEmail.setError("Email không được để trống");
+            edtEmail.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(password)) {
-            etPassword.setError("Mật khẩu không được để trống");
-            etPassword.requestFocus();
+            edtPassword.setError("Mật khẩu không được để trống");
+            edtPassword.requestFocus();
             return;
         }
 
-        // Đăng nhập với Firebase
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // Đăng nhập thành công
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        if (user != null) {
-                            Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                            // Chuyển đến màn hình chính hoặc màn hình khác sau khi đăng nhập thành công
-                            Intent intent = new Intent(LoginActivity.this, ScreensActivity.class);
-                            if(email.equals("admin@gmail.com")){
-                                checkRole = "1";
-                                intent.putExtra("role",checkRole );
-                            }else {
-                                checkRole = "0";
-                                intent.putExtra("role",checkRole );
-                            }
+        // Kiểm tra nếu email không hợp lệ
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            edtEmail.setError("Email không hợp lệ");
+            edtEmail.requestFocus();
+            return;
+        }
 
-                            SharedPreferences preferences = getSharedPreferences("CHECK_LOGIN", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("EMAIL",email);
-                            editor.apply();
-                            startActivity(intent);
-                            finish();
-                        }
-                    } else {
-                        // Đăng nhập thất bại
-                        Toast.makeText(LoginActivity.this, "Đăng nhập thất bại. Kiểm tra lại thông tin.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        ModelUser user = null;
+        userDAO = new UserDAO(this);
+        user = userDAO.checkLogin(email,password);
+        if(!(user == null)){
+            Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(LoginActivity.this, ScreensActivity.class);
+            if (user.getEmail().equals("admin@gmail.com")) {
+                checkRole = "1";
+                intent.putExtra("role",checkRole );
+            } else {
+                checkRole = "0";
+                intent.putExtra("role",checkRole );
+            }
+            SharedPreferences preferences = getSharedPreferences("CHECK_LOGIN", MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("EMAIL",email);
+            editor.putString("PASSWORD",password);
+            editor.apply();
+            startActivity(intent);
+            finish();
+        } else {
+            Toast.makeText(LoginActivity.this, "Đăng nhập thất bại!", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

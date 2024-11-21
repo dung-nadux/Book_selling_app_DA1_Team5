@@ -67,7 +67,7 @@ public class UserFragment extends Fragment {
         rvUser.setAdapter(userAdapter);
 
         db = FirebaseFirestore.getInstance();
-        loadUsersFromFirestore();
+//        loadUsersFromFirestore();
 
         imgBackUser.setOnClickListener(v -> {
             getActivity().onBackPressed();
@@ -96,24 +96,24 @@ public class UserFragment extends Fragment {
 
     }
 
-    private void loadUsersFromFirestore() {
-        db.collection("users")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        userList.clear();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            ModelUser user = document.toObject(ModelUser.class);
-                            user.setId(document.getId());
-                            userList.add(user);
-
-                        }
-                        userAdapter.notifyDataSetChanged();
-                    } else {
-                        Toast.makeText(getContext(), "Lỗi khi tải danh sách người dùng", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
+//    private void loadUsersFromFirestore() {
+//        db.collection("users")
+//                .get()
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        userList.clear();
+//                        for (QueryDocumentSnapshot document : task.getResult()) {
+//                            ModelUser user = document.toObject(ModelUser.class);
+//                            user.setId(document.getId());
+//                            userList.add(user);
+//
+//                        }
+//                        userAdapter.notifyDataSetChanged();
+//                    } else {
+//                        Toast.makeText(getContext(), "Lỗi khi tải danh sách người dùng", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
     // Lắng nghe sự kiện nhập liệu từ ô tìm kiếm và tìm kiếm trực tiếp , tự động
 
     private void filterUsers(String query) {
@@ -123,7 +123,7 @@ public class UserFragment extends Fragment {
         } else {
             String lowerCaseQuery = query.toLowerCase();
             for (ModelUser user : userList) {
-                if (user.getUsername().toLowerCase().contains(lowerCaseQuery) ||
+                if (user.getFullname().toLowerCase().contains(lowerCaseQuery) ||
                         user.getEmail().toLowerCase().contains(lowerCaseQuery)) {
                     filteredUserList.add(user);
                 }

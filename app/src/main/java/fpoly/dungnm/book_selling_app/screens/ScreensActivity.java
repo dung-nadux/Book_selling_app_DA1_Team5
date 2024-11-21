@@ -1,6 +1,7 @@
 package fpoly.dungnm.book_selling_app.screens;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -150,6 +151,11 @@ public class ScreensActivity extends AppCompatActivity implements NavigationView
                         .setTitle("Đăng xuất")
                         .setMessage("Bạn có chắc chắn muốn thoát không?")
                         .setPositiveButton("Có", (dialog, which) -> {
+                            SharedPreferences preferences = getSharedPreferences("CHECK_LOGIN", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("EMAIL","0");
+                            editor.putString("PASSWORD","0");
+                            editor.apply();
                             // Chuyển sang màn hình LoginActivity
                             startActivity(new Intent(this, LoginActivity.class));
                             finish(); // Kết thúc activity hiện tại nếu cần

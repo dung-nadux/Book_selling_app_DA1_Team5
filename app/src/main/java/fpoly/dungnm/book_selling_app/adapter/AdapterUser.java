@@ -44,7 +44,7 @@ public class AdapterUser extends RecyclerView.Adapter<AdapterUser.ViewHoder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHoder holder, int position) {
         ModelUser user = userList.get(position);
-        holder.tvUsername.setText(user.getUsername());
+        holder.tvUsername.setText(user.getFullname());
         holder.tvUserEmail.setText(user.getEmail());
 
     }
