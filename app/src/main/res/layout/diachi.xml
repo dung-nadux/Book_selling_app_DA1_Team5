@@ -91,7 +91,7 @@
                 android:textStyle="bold"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="16dp"
-                android:paintFlags="underline|antiAlias"/>
+               />
         </LinearLayout>
 
         <!-- RadioButton cho Khung 1 -->
@@ -157,7 +157,7 @@
                 android:textStyle="bold"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="16dp"
-                android:paintFlags="underline|antiAlias"/>
+               />
         </LinearLayout>
 
         <!-- RadioButton cho Khung 2 -->

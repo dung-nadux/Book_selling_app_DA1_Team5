@@ -10,7 +10,7 @@ public class ModelProducts implements Parcelable {
     String author;
     int price;
     String description;
-    String category;
+    String category; 
     int quantity;
     private boolean isSelected; // Thêm thuộc tính này
 

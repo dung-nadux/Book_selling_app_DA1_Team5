@@ -5,6 +5,7 @@ public class ModelUser {
     private String username;
     private String email;
 
+
     public ModelUser() {
     }
 

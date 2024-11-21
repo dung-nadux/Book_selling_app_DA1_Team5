@@ -30,7 +30,7 @@ public class CartDAO {
                 byte[] imageBytes = cursor.getBlob(1);
                 productList.add(new ModelProducts(
                         cursor.getInt(0),      // id
-                        imageBytes,            // image
+                        imageBytes,                     // image
                         cursor.getString(2),   // title
                         cursor.getString(3),   // author
                         cursor.getInt(4),      // price
@@ -61,34 +61,66 @@ public class CartDAO {
 //         }
 //         return true;
 //     }
-public boolean insertOrUpdateCart(ModelProducts product) {
-    // Check if the product already exists in the cart
-    ModelProducts existingProduct = getCartById(product.getId());
-    if (existingProduct != null) {
-        // If it exists, update the quantity
-        int newQuantity = existingProduct.getQuantity() + product.getQuantity();
-        return updateQuantity(product.getId(), newQuantity);
-    } else {
-        // If it doesn't exist, insert the new product
-        ContentValues values = new ContentValues();
-        values.put("image", product.getImage());
-        values.put("title", product.getTitle());
-        values.put("author", product.getAuthor());
-        values.put("price", product.getPrice());
-        values.put("description", product.getDescription());
-        values.put("category", product.getCategory());
-        values.put("quantity", product.getQuantity());
+//    public boolean insertOrUpdateCart(ModelProducts product) {
+//        // Lấy sản phẩm từ giỏ hàng theo ID
+//        ModelProducts existingProduct = getCartById(product.getId());
+//        if (existingProduct != null) {
+//            // Nếu đã tồn tại, cộng thêm số lượng
+//            int newQuantity = existingProduct.getQuantity() + 1; // Tăng số lượng thêm 1
+//            return updateQuantity(product.getId(), newQuantity);
+//        } else {
+//            // Nếu chưa tồn tại, thêm sản phẩm mới với số lượng là 1
+//            ContentValues values = new ContentValues();
+//            values.put("id", product.getId());
+//            values.put("image", product.getImage());
+//            values.put("title", product.getTitle());
+//            values.put("author", product.getAuthor());
+//            values.put("price", product.getPrice());
+//            values.put("description", product.getDescription());
+//            values.put("category", product.getCategory());
+//            values.put("quantity", 1); // Đặt số lượng mặc định là 1
+//
+//            long result = database.insert("CART", null, values);
+//            if (result == -1) {
+//                Log.e("CartDAO", "Lỗi khi thêm sản phẩm vào giỏ hàng");
+//                return false;
+//            }
+//            return true;
+//        }
+//    }
 
-        long result = database.insert("CART", null, values);
-        if (result == -1) {
-            Log.e("CartDAO", "Lỗi khi thêm sản phẩm vào giỏ hàng");
-            return false;
+    public boolean insertOrUpdateCart(ModelProducts product) {
+        // Lấy sản phẩm từ giỏ hàng theo ID
+        ModelProducts existingProduct = getCartById(product.getId());
+        if (existingProduct != null) {
+            // Nếu sản phẩm đã tồn tại, tăng số lượng lên
+            int newQuantity = product.getQuantity() + 1;
+            return updateQuantity(product.getId(), newQuantity);
+        } else {
+            // Nếu sản phẩm chưa tồn tại, thêm mới với số lượng ban đầu
+            ContentValues values = new ContentValues();
+            values.put("id", product.getId());
+            values.put("image", product.getImage());
+            values.put("title", product.getTitle());
+            values.put("author", product.getAuthor());
+            values.put("price", product.getPrice());
+            values.put("description", product.getDescription());
+            values.put("category", product.getCategory());
+            values.put("quantity", product.getQuantity()+1); // Đặt số lượng từ sản phẩm đầu vào
+            
+            Log.e("2222222222222", "insertOrUpdateCart: "+product.getQuantity() );
+            long result = database.insert("CART", null, values);
+            if (result == -1) {
+                Log.e("CartDAO", "Lỗi khi thêm sản phẩm vào giỏ hàng");
+                return false;
+            }
+            return true;
         }
-        return true;
     }
-}
 
-public boolean updateQuantity(int productId, int quantity) {
+
+
+    public boolean updateQuantity(int productId, int quantity) {
     ContentValues values = new ContentValues();
     values.put("quantity", quantity); // Update the quantity
 

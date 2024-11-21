@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 public class DBHelper extends SQLiteOpenHelper {
 
     public DBHelper(@Nullable Context context) {
-        super(context, "DBBookInfo", null, 2);
+        super(context, "DBBookInfo", null, 3);
     }
 
     @Override
@@ -41,8 +41,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String createTableAdress = "CREATE TABLE ADDRESS(" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "receive TEXT, "+
-                "adress TEXT " +
+                "fullname TEXT, "+
+                "phone INTEGER, "+
+                "address TEXT " +
                 ");";
         db.execSQL(createTableAdress);
 
@@ -56,6 +57,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String dropTable1 = "DROP TABLE IF EXISTS CART";
         db.execSQL(dropTable1);
+
+        String dropTable2 = "DROP TABLE IF EXISTS ADDRESS";
+        db.execSQL(dropTable2);
 
         onCreate(db);
     }

@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
@@ -15,13 +16,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+
+import fpoly.dungnm.book_selling_app.DAO.AddressDAO;
 import fpoly.dungnm.book_selling_app.R;
+import fpoly.dungnm.book_selling_app.adapter.AdapterAdderss;
+import fpoly.dungnm.book_selling_app.adapter.AdapterHomeProducts;
+import fpoly.dungnm.book_selling_app.models.ModelAddres;
 
 public class AdressActivity extends AppCompatActivity {
     RecyclerView rcvAdress;
     ImageView imgAddAdress;
+    AddressDAO addressDAO;
+    ArrayList<ModelAddres> list = new ArrayList<>();
+    AdapterAdderss adapterAdderss ;
+    ImageView imgBackProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +47,23 @@ public class AdressActivity extends AppCompatActivity {
         });
         rcvAdress = findViewById(R.id.rcvAdress);
         imgAddAdress = findViewById(R.id.imgAddAdress);
+        imgBackProfile = findViewById(R.id.imgBackProfile);
+        addressDAO = new AddressDAO(this);
+
+        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        rcvAdress.setLayoutManager(manager);
+
+        list = addressDAO.getAllAddresses();
+
+        adapterAdderss = new AdapterAdderss(this, list);
+
+        rcvAdress.setAdapter(adapterAdderss);
 
         imgAddAdress.setOnClickListener(v -> {
             dialogAddAdress();
+        });
+        imgBackProfile.setOnClickListener(v -> {
+            finish();
         });
     }
 
@@ -47,31 +73,46 @@ public class AdressActivity extends AppCompatActivity {
         builder.setView(view);
 
         EditText edEnterAdress = view.findViewById(R.id.edEnterAdress);
-        RadioGroup rgAdress = view.findViewById(R.id.rgAdress);
+        EditText edFullName = view.findViewById(R.id.edFullName);
+        EditText edPhone = view.findViewById(R.id.edPhone);
 
-        // Đặt "Nhà riêng" làm mặc định
-        rgAdress.check(R.id.radio_button_home);
+        builder.setPositiveButton("Thêm", (dialog, which) -> {
+            String enterAdress = edEnterAdress.getText().toString().trim();
+            String fullName = edFullName.getText().toString().trim();
+            String phoneStr = edPhone.getText().toString().trim();
 
-        builder.setPositiveButton("Thêm" , (dialog, which) -> {
-            String enterAdress = edEnterAdress.getText().toString();
-            int idAdress = rgAdress.getCheckedRadioButtonId();
+            // Kiểm tra thông tin nhập
+            if (enterAdress.isEmpty() || fullName.isEmpty() || phoneStr.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            // Kiểm tra xem người dùng đã chọn RadioButton nào
-            if (idAdress != -1) { // Nếu không có lựa chọn nào, idAdress sẽ là -1
-                RadioButton selectedRadioButton = view.findViewById(idAdress); // Lấy RadioButton được chọn
-                String selectedText = selectedRadioButton.getText().toString(); // Lấy text từ RadioButton
-                // Xử lý text hoặc lưu địa chỉ
-                System.out.println("Địa chỉ: " + enterAdress + ", Loại: " + selectedText);
-            } else {
-                System.out.println("Vui lòng chọn loại địa chỉ.");
+            try {
+                // Chuyển đổi phone sang số nguyên
+                int phone = Integer.parseInt(phoneStr);
+
+                // Tạo đối tượng ModelAddres
+                ModelAddres address = new ModelAddres(fullName, phone, enterAdress);
+
+                // Thêm vào cơ sở dữ liệu
+                boolean check = addressDAO.insertAddress(address);
+                if (check) {
+                    Toast.makeText(this, "Thêm địa chỉ thành công", Toast.LENGTH_SHORT).show();
+                    list.clear();
+                    list.addAll(addressDAO.getAllAddresses());
+                    adapterAdderss.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(this, "Thêm địa chỉ thất bại", Toast.LENGTH_SHORT).show();
+                }
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Số điện thoại không hợp lệ", Toast.LENGTH_SHORT).show();
             }
         });
 
-        builder.setNegativeButton("Hủy" , (dialog, which) -> {
-            dialog.dismiss();
-        });
+        builder.setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());
 
         Dialog dialog = builder.create();
         dialog.show();
     }
+
 }

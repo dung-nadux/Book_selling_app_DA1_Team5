@@ -1,7 +1,10 @@
 package fpoly.dungnm.book_selling_app.pages.order_payment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,9 +20,11 @@ import java.util.ArrayList;
 
 import fpoly.dungnm.book_selling_app.DAO.CartDAO;
 import fpoly.dungnm.book_selling_app.R;
+import fpoly.dungnm.book_selling_app.adapter.AdapterAdderss;
 import fpoly.dungnm.book_selling_app.adapter.AdapterCart;
 import fpoly.dungnm.book_selling_app.adapter.AdapterOrderPayment;
 import fpoly.dungnm.book_selling_app.models.ModelProducts;
+import fpoly.dungnm.book_selling_app.pages.crud_frofile.crud_adress.AdressActivity;
 
 public class OrderPaymentActivity extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -27,7 +32,8 @@ public class OrderPaymentActivity extends AppCompatActivity {
     ArrayList<ModelProducts> listCart = new ArrayList<>();
     ImageView imgBackCart;
     CartDAO cartDAO;
-//    TextView tvSelectedProducts;
+    RelativeLayout rlAdress;
+    TextView tvAddressText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +47,10 @@ public class OrderPaymentActivity extends AppCompatActivity {
         });
         recyclerView = findViewById(R.id.rcvOrderpayment);
         imgBackCart = findViewById(R.id.imgBackOderpayment);
+        rlAdress = findViewById(R.id.rlAdress);
+        tvAddressText = findViewById(R.id.tvAddressText);
 
-// Nhận danh sách sản phẩm từ Intent
+        // Nhận danh sách sản phẩm từ Intent
         ArrayList<ModelProducts> selectedProducts = getIntent().getParcelableArrayListExtra("selectedProducts");
 
         if (selectedProducts != null && !selectedProducts.isEmpty()) {
@@ -61,6 +69,25 @@ public class OrderPaymentActivity extends AppCompatActivity {
         imgBackCart.setOnClickListener(v -> {
             onBackPressed();
         });
+
+        rlAdress.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdressActivity.class);
+            startActivity(intent);
+        });
+
+        Intent intent = getIntent();
+        if(intent != null){
+            String fullname = intent.getStringExtra("fullname");
+            String phone = intent.getStringExtra("phone");
+            String address = intent.getStringExtra("address");
+
+            if (fullname != null && phone != null && address != null) {
+                tvAddressText.setText("Họ và tên: " + fullname + "\nSDT: " + phone + "\nĐịa chỉ: " + address);
+            } else {
+                Toast.makeText(this, "Không nhận được thông tin địa chỉ!", Toast.LENGTH_SHORT).show();
+            }
+        }
+
 
     }
 

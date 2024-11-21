@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="#F9F9F9"
-    >
+    android:background="#F9F9F9">
     <ImageView
         android:id="@+id/imgBackProfile"
         android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
             android:id="@+id/Momo"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/img_1"
+            android:src="@drawable/ic_launcher_background"
             android:contentDescription="MoMo Logo"
             android:layout_gravity="center_vertical" />
 
@@ -72,7 +72,7 @@
             android:id="@+id/imgOption"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/img_2"
+            android:src="@drawable/ic_launcher_background"
             android:contentDescription="More Options"
             android:layout_gravity="center_vertical" />
     </LinearLayout>

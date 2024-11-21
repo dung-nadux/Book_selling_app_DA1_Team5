@@ -45,6 +45,7 @@
             android:layout_marginTop="20dp">
 
             <RelativeLayout
+                android:id="@+id/rlAdress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:elevation="4dp"
@@ -52,6 +53,7 @@
                 android:padding="16dp">
 
                 <LinearLayout
+                    android:id="@+id/llAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -66,6 +68,7 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/tvAddressText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="127, Phùng Khoang, Nam Từ Liêm, HN"
@@ -74,6 +77,7 @@
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/imgNextAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"

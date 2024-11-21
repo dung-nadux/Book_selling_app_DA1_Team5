@@ -13,24 +13,42 @@
         android:gravity="center_horizontal"
         android:textSize="20dp"/>
 
-    <RadioGroup
-        android:id="@+id/rgAdress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+<!--    <RadioGroup-->
+<!--        android:id="@+id/rgAdress"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content">-->
 
-        <RadioButton
-            android:id="@+id/radio_button_home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nhà riêng" />
+<!--        <RadioButton-->
+<!--            android:id="@+id/radio_button_home"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Nhà riêng" />-->
 
-        <RadioButton
-            android:id="@+id/radio_button_office"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Văn phòng" />
+<!--        <RadioButton-->
+<!--            android:id="@+id/radio_button_office"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Văn phòng" />-->
 
-    </RadioGroup>
+<!--    </RadioGroup>-->
+
+    <EditText
+        android:id="@+id/edFullName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPostalAddress"
+        android:layout_marginTop="10dp"
+        android:hint="Nhập Họ tên"
+       />
+
+    <EditText
+        android:id="@+id/edPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:layout_marginTop="10dp"
+        android:hint="Nhập số điện thoại"
+        android:text="0"/>
 
     <EditText
         android:id="@+id/edEnterAdress"

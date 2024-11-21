@@ -105,21 +105,6 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.ViewHoder> {
         // Ensure the checkbox reflects the current state
         holder.cbCheck.setChecked(product.isSelected());
 
-        // btnSendSelectedProducts.setOnClickListener(v -> {
-        //     ArrayList<Integer> selectedIds = new ArrayList<>();
-
-        //     for (ModelProducts product : list) {
-        //         if (product.isSelected()) { // Kiểm tra sản phẩm nào được tích
-        //             selectedIds.add(product.getId());
-        //         }
-        //     }
-
-        //     // Chuyển danh sách ID sang màn khác bằng Intent
-        //     Intent intent = new Intent(context, OrderPaymentActivity.class);
-        //     intent.putExtra("selectedIds", selectedIds);
-        //     startActivity(intent);
-        // });
-
 
         // Cập nhật số lượng từ đối tượng sản phẩm
         holder.tvCartQuantity.setText(String.valueOf(product.getQuantity()));
@@ -131,7 +116,7 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.ViewHoder> {
             holder.tvCartQuantity.setText(String.valueOf(product.getQuantity())); // Cập nhật giao diện
 
             // Cập nhật vào cơ sở dữ liệu nếu cần
-            cartDAO.updateQuantity(product.getId(), quantity); // Giả sử bạn có phương thức này trong CartDAO
+            cartDAO.updateQuantity(product.getId(), quantity+1); // Giả sử bạn có phương thức này trong CartDAO
         });
 
         // Xử lý sự kiện khi nhấn nút -
@@ -142,7 +127,7 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.ViewHoder> {
                 holder.tvCartQuantity.setText(String.valueOf(product.getQuantity())); // Cập nhật giao diện
 
                 // Cập nhật vào cơ sở dữ liệu nếu cần
-                cartDAO.updateQuantity(product.getId(), quantity); // Giả sử bạn có phương thức này trong CartDAO
+                cartDAO.updateQuantity(product.getId(), quantity-1); // Giả sử bạn có phương thức này trong CartDAO
             }
         });
 
