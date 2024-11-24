@@ -10,11 +10,11 @@ public class ModelProducts implements Parcelable {
     String author;
     int price;
     String description;
-    String category; 
+    int category;
     int quantity;
     private boolean isSelected; // Thêm thuộc tính này
 
-    public ModelProducts(int id, byte[] image, String title, String author, int price, String description, String category, int quantity, boolean isSelected) {
+    public ModelProducts(int id, byte[] image, String title, String author, int price, String description, int category, int quantity, boolean isSelected) {
         this.id = id;
         this.image = image;
         this.title = title;
@@ -30,7 +30,7 @@ public class ModelProducts implements Parcelable {
     }
 
 
-    public ModelProducts(int id, byte[] image, String title, String author, int price, String description, String category, int quantity) {
+    public ModelProducts(int id, byte[] image, String title, String author, int price, String description, int category, int quantity) {
         this.id = id;
         this.image = image;
         this.title = title;
@@ -41,7 +41,7 @@ public class ModelProducts implements Parcelable {
         this.quantity = quantity;
     }
 
-    public ModelProducts(int id, byte[] image, String title, String author, int price, String description, String category) {
+    public ModelProducts(int id, byte[] image, String title, String author, int price, String description, int category) {
         this.id = id;
         this.image = image;
         this.title = title;
@@ -51,13 +51,23 @@ public class ModelProducts implements Parcelable {
         this.category = category;
     }
 
-    public ModelProducts(byte[] image, String title, String author, int price, String description, String category) {
+    public ModelProducts(byte[] image, String title, String author, int price, String description, int category) {
         this.image = image;
         this.title = title;
         this.author = author;
         this.price = price;
         this.description = description;
         this.category = category;
+    }
+
+    public ModelProducts(byte[] image, String title, String author, int price, String description, int category, int quantity) {
+        this.image = image;
+        this.title = title;
+        this.author = author;
+        this.price = price;
+        this.description = description;
+        this.category = category;
+        this.quantity = quantity;
     }
 
     public boolean isSelected() {
@@ -128,11 +138,11 @@ public class ModelProducts implements Parcelable {
         this.description = description;
     }
 
-    public String getCategory() {
+    public int getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(int category) {
         this.category = category;
     }
 
@@ -144,7 +154,7 @@ public class ModelProducts implements Parcelable {
         author = in.readString();
         price = in.readInt();
         description = in.readString();
-        category = in.readString();
+        category = in.readInt();
         quantity = in.readInt();
         isSelected = in.readByte() != 0; // 1 = true, 0 = false
     }
@@ -174,7 +184,7 @@ public class ModelProducts implements Parcelable {
         dest.writeString(author);
         dest.writeInt(price);
         dest.writeString(description);
-        dest.writeString(category);
+        dest.writeInt(category);
         dest.writeInt(quantity);
         dest.writeByte((byte) (isSelected ? 1 : 0)); // 1 = true, 0 = false
     }

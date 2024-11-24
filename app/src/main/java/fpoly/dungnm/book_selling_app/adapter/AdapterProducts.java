@@ -31,6 +31,7 @@ public class AdapterProducts extends RecyclerView.Adapter<AdapterProducts.ViewHo
     Context context;
     ArrayList<ModelProducts> list;
     ProductDAO productDAO;
+    ModelProducts product;
 
     public AdapterProducts(Context context, ArrayList<ModelProducts> listSanPham) {
         this.context = context;
@@ -39,9 +40,9 @@ public class AdapterProducts extends RecyclerView.Adapter<AdapterProducts.ViewHo
     }
 
     public interface OnItemClickListener {
-        void deleteItem(String id);
+        void deleteItem(int id);
 
-        void updateItem(String id, String name, String title, String author, String price, String description, String category);
+        void updateItem(String id, String name, String title, String author, String price, String description, int category, int quantity);
     }
 
     public void setOnItemClickListener(OnItemClickListener click) {
@@ -85,14 +86,14 @@ public class AdapterProducts extends RecyclerView.Adapter<AdapterProducts.ViewHo
         holder.itemAuthor.setText(product.getAuthor());
         holder.itemPrice.setText(String.valueOf(product.getPrice()));
         holder.itemDescription.setText(product.getDescription());
-        holder.itemCategory.setText(product.getCategory());
+        holder.itemCategory.setText(""+product.getCategory());
 
         // Nếu có URL ảnh, bạn có thể sử dụng Glide hoặc Picasso để tải ảnh từ URL
         Glide.with(context).load(product.getImage()).into(holder.itemImage);
 
         // xoá sản phẩm
         holder.itemView.setOnLongClickListener(v -> {
-            String id = String.valueOf(list.get(holder.getAdapterPosition()).getId());
+            int id = list.get(holder.getAdapterPosition()).getId();
             click.deleteItem(id);
             return true;
         });
@@ -105,9 +106,10 @@ public class AdapterProducts extends RecyclerView.Adapter<AdapterProducts.ViewHo
             String author = list.get(holder.getAdapterPosition()).getAuthor();
             String price = String.valueOf(list.get(holder.getAdapterPosition()).getPrice());
             String description = list.get(holder.getAdapterPosition()).getDescription();
-            String category = list.get(holder.getAdapterPosition()).getCategory();
+            int category = list.get(holder.getAdapterPosition()).getCategory();
+            int quantity = list.get(holder.getAdapterPosition()).getQuantity();
 
-            click.updateItem(id, Arrays.toString(image), title, author, price, description, category);
+            click.updateItem(id, Arrays.toString(image), title, author, price, description, category, quantity);
         });
 
 

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -24,17 +25,20 @@ import fpoly.dungnm.book_selling_app.DAO.ProductDAO;
 import fpoly.dungnm.book_selling_app.R;
 import fpoly.dungnm.book_selling_app.adapter.AdapterCart;
 import fpoly.dungnm.book_selling_app.adapter.AdapterProducts;
+import fpoly.dungnm.book_selling_app.models.ModelCart;
 import fpoly.dungnm.book_selling_app.models.ModelProducts;
 import fpoly.dungnm.book_selling_app.pages.order_payment.OrderPaymentActivity;
 
 
 public class CartFragment extends Fragment {
     RecyclerView recyclerView;
+    private TextView tvTotalPrice;
     AdapterCart adapter;
-    ArrayList<ModelProducts> listCart = new ArrayList<>();
+    ArrayList<ModelCart> listCart = new ArrayList<>();
     ImageView imgBackCart;
     CartDAO cartDAO;
     Button btnContinue;
+    double totalPrice = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,9 +54,13 @@ public class CartFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerViewCart);
         imgBackCart = view.findViewById(R.id.imgBackCart);
         btnContinue = view.findViewById(R.id.btnCheckout);
+        tvTotalPrice = view.findViewById(R.id.tvTotalPrice);
 
         cartDAO = new CartDAO(getContext());
         listCart = cartDAO.getAllCart();
+
+        // Cập nhật tổng giá tiền
+        updateTotalPrice();
 
         // Thiết lập RecyclerView
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
@@ -63,6 +71,14 @@ public class CartFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
 
+        // Cập nhật tổng giá tiền khi có sự thay đổi trong danh sách sản phẩm
+        adapter.setOnItemClickListener(new AdapterCart.OnItemClickListener() {
+            @Override
+            public void onItemClick() {
+                updateTotalPrice();
+            }
+        });
+
         imgBackCart.setOnClickListener(v -> {
             getActivity().onBackPressed();
         });
@@ -71,12 +87,12 @@ public class CartFragment extends Fragment {
 //        });
 
         btnContinue.setOnClickListener(v -> {
-            ArrayList<ModelProducts> selectedProducts = new ArrayList<>();
+            ArrayList<ModelCart> selectedProducts = new ArrayList<>();
 
             // Lấy các sản phẩm đã được chọn
-            for (ModelProducts product : listCart) {
-                if (product.isSelected()) {
-                    selectedProducts.add(product);
+            for (ModelCart cart : listCart) {
+                if (cart.getQuantity() > 0) {
+                    selectedProducts.add(cart);
                 }
             }
 
@@ -88,9 +104,17 @@ public class CartFragment extends Fragment {
 
             // Chuyển danh sách sản phẩm đã chọn sang màn hình thanh toán
             Intent intent = new Intent(getContext(), OrderPaymentActivity.class);
-            intent.putParcelableArrayListExtra("selectedProducts", selectedProducts);
+//            intent.putParcelableArrayListExtra("selectedProducts", selectedProducts);
             startActivity(intent);
         });
 
+    }
+
+    private void updateTotalPrice() {
+        totalPrice = 0;
+        for (ModelCart cart : listCart) {
+            totalPrice += cart.getAmount();
+        }
+        tvTotalPrice.setText(String.valueOf(totalPrice));
     }
 }

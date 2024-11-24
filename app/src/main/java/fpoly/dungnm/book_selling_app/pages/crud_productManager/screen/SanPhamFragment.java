@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -36,21 +37,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import fpoly.dungnm.book_selling_app.DAO.CategoryDAO;
 import fpoly.dungnm.book_selling_app.DAO.ProductDAO;
 import fpoly.dungnm.book_selling_app.R;
 import fpoly.dungnm.book_selling_app.adapter.AdapterProducts;
+import fpoly.dungnm.book_selling_app.adapter.AdapterSpinnerCategory;
+import fpoly.dungnm.book_selling_app.models.ModelCategory;
 import fpoly.dungnm.book_selling_app.models.ModelProducts;
 
 public class SanPhamFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
-    private EditText edTitle, edAuthor, edPrice, edDescription, edCategory;
+    private EditText edTitle, edAuthor, edPrice, edDescription, edQuantity;
+    private Spinner spCategory;
     FloatingActionButton fabAdd;
     private Uri imageUri;
     RecyclerView recyclerView;
     AdapterProducts adapter;
     ArrayList<ModelProducts> listProducts = new ArrayList<>();
+    ArrayList<ModelCategory> listCategory = new ArrayList<>();
     ImageView ivImage;
     ProductDAO productDAO;
+    CategoryDAO categoryDAO;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,6 +72,7 @@ public class SanPhamFragment extends Fragment {
 
         fabAdd = view.findViewById(R.id.fabAdd);
         recyclerView = view.findViewById(R.id.recyclerView);
+
 
         productDAO = new ProductDAO(getContext());
         listProducts = productDAO.getAllProducts();
@@ -86,15 +94,15 @@ public class SanPhamFragment extends Fragment {
         adapter.setOnItemClickListener(new AdapterProducts.OnItemClickListener() {
 
             @Override
-            public void deleteItem(String id) {
+            public void deleteItem(int id) {
                 // Xác nhận xóa và cập nhật lại danh sách
                 showDeleteConfirmationDialog(id);
             }
 
             @Override
-            public void updateItem(String id, String image, String title, String author, String price, String description, String category) {
+            public void updateItem(String id, String image, String title, String author, String price, String description, int category, int quantity) {
                 Log.e("=========//////////", image );
-                showAlertDialogUpdate(id, image, title, author, price, description, category);
+                showAlertDialogUpdate(id, image, title, author, price, description, category, quantity);
             }
 
         });
@@ -111,8 +119,20 @@ public class SanPhamFragment extends Fragment {
         edAuthor = dialogView.findViewById(R.id.edAuthor);
         edPrice = dialogView.findViewById(R.id.edPrice);
         edDescription = dialogView.findViewById(R.id.edDescription);
-        edCategory = dialogView.findViewById(R.id.edCategory);
         ivImage = dialogView.findViewById(R.id.ivImage);
+        spCategory = dialogView.findViewById(R.id.spCategory);
+        edQuantity = dialogView.findViewById(R.id.edQuantity);
+
+        // Lấy danh sách danh mục từ cơ sở dữ liệu
+        categoryDAO = new CategoryDAO(getContext());
+        listCategory = categoryDAO.getAllCategory();
+        for (ModelCategory category : listCategory) {
+            Log.e("cate", ""+category.getId());
+        }
+
+        AdapterSpinnerCategory adapterSpinnerCategory = new AdapterSpinnerCategory(getContext(), listCategory);
+        spCategory.setAdapter(adapterSpinnerCategory);
+        Toast.makeText(getContext(), "listCate: " + listCategory.size(), Toast.LENGTH_SHORT).show();
 
         // Tạo Dialog và thiết lập các thuộc tính
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -165,21 +185,16 @@ public class SanPhamFragment extends Fragment {
         String author = edAuthor.getText().toString();
         int price = Integer.parseInt(edPrice.getText().toString());
         String description = edDescription.getText().toString();
-        String category = edCategory.getText().toString();
-
-        // cách 1
-        // Lưu hình ảnh vào bộ nhớ ngoài
-//        String imagePath = saveImageToExternalStorage(imageUri);
-//
-//        // Tạo đối tượng ModelProducts
-//        ModelProducts product = new ModelProducts(imagePath.getBytes(), title, author, price, description, category);
-
+        int quantity = Integer.parseInt(edQuantity.getText().toString());
+        ModelCategory categoryModel = listCategory.get(spCategory.getSelectedItemPosition());
+        int category = categoryModel.getId() - 1;
+        Toast.makeText(getContext(), "position: " + spCategory.getSelectedItemPosition() + ", category: " + category, Toast.LENGTH_SHORT).show();
         // cách 2
         // Chuyển đổi ảnh thành byte[]
         byte[] imageByteArray = imageUriToByteArray(imageUri);
 
         // Tạo đối tượng ModelProducts
-        ModelProducts product = new ModelProducts(imageByteArray, title, author, price, description, category);
+        ModelProducts product = new ModelProducts(imageByteArray, title, author, price, description, category, quantity);
 
         // Gọi phương thức insertProduct từ DAO để lưu sản phẩm vào cơ sở dữ liệu
         boolean isInserted = productDAO.insertProduct(product);
@@ -210,25 +225,33 @@ public class SanPhamFragment extends Fragment {
         return imagePath;
     }
 
-    private void showAlertDialogUpdate(String productId, String image, String title, String author, String price, String description, String category) {
+    private void showAlertDialogUpdate(String productId, String image, String title, String author, String price, String description, int category, int quantity) {
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.item_product_add, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Sửa sản phẩm");
         builder.setView(dialogView);
 
-        ImageView ivImage = dialogView.findViewById(R.id.ivImage);
+         ivImage = dialogView.findViewById(R.id.ivImage);
         EditText edTitle = dialogView.findViewById(R.id.edTitle);
         EditText edAuthor = dialogView.findViewById(R.id.edAuthor);
         EditText edPrice = dialogView.findViewById(R.id.edPrice);
         EditText edDescription = dialogView.findViewById(R.id.edDescription);
-        EditText edCategory = dialogView.findViewById(R.id.edCategory);
+        spCategory = dialogView.findViewById(R.id.spCategory);
+        edQuantity = dialogView.findViewById(R.id.edQuantity);
+
+        Toast.makeText(getContext(), "category: " + category, Toast.LENGTH_SHORT).show();
+        categoryDAO = new CategoryDAO(getContext());
+        listCategory = categoryDAO.getAllCategory();
+        AdapterSpinnerCategory adapterSpinnerCategory = new AdapterSpinnerCategory(getContext(), listCategory);
+        spCategory.setAdapter(adapterSpinnerCategory);
 
         // Điền thông tin hiện tại vào các EditText
         edTitle.setText(title);
         edAuthor.setText(author);
         edPrice.setText(price);
         edDescription.setText(description);
-        edCategory.setText(category);
+        spCategory.setSelection(category - 1);
+        edQuantity.setText(String.valueOf(quantity));
 
         // Hiển thị ảnh hiện tại nếu có
         if (image != null && !image.isEmpty()) {
@@ -242,27 +265,28 @@ public class SanPhamFragment extends Fragment {
             ivImage.setImageBitmap(bitmap);
         }
 
-        ivImage.setOnClickListener(v -> openImagePickerForUpdate());
+        ivImage.setOnClickListener(v -> openImageChooser());
 
         builder.setPositiveButton("Lưu", (dialog, which) -> {
             String updatedTitle = edTitle.getText().toString();
             String updatedAuthor = edAuthor.getText().toString();
             String updatedPrice = edPrice.getText().toString();
             String updatedDescription = edDescription.getText().toString();
-            String updatedCategory = edCategory.getText().toString();
+            int categoryId = spCategory.getSelectedItemPosition() + 1;
+            int updatedQuantity = Integer.parseInt(edQuantity.getText().toString());
 
-            if (updatedTitle.isEmpty() || updatedAuthor.isEmpty() || updatedPrice.isEmpty() || updatedDescription.isEmpty() || updatedCategory.isEmpty()) {
+            if (updatedTitle.isEmpty() || updatedAuthor.isEmpty() || updatedPrice.isEmpty() || updatedDescription.isEmpty()) {
                 Toast.makeText(getContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
-
             ModelProducts updatedProduct = new ModelProducts();
             updatedProduct.setId(Integer.parseInt(productId));
             updatedProduct.setTitle(updatedTitle);
             updatedProduct.setAuthor(updatedAuthor);
             updatedProduct.setPrice(Integer.parseInt(updatedPrice));
             updatedProduct.setDescription(updatedDescription);
-            updatedProduct.setCategory(updatedCategory);
+            updatedProduct.setCategory(categoryId);
+            updatedProduct.setQuantity(updatedQuantity);
 
             // Kiểm tra xem có ảnh mới không
             if (imageUri != null) {
@@ -287,13 +311,13 @@ public class SanPhamFragment extends Fragment {
     }
 
     // Xóa sản phẩm khỏi cơ sở dữ liệu và cập nhật lại danh sách
-    private void showDeleteConfirmationDialog(String id) {
+    private void showDeleteConfirmationDialog(int id) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Xác nhận xoá");
         builder.setMessage("Bạn có chắc chắn muốn xoá sản phẩm này?");
 
         builder.setPositiveButton("Có", (dialog, which) -> {
-            boolean check = productDAO.deleteProduct(Integer.parseInt(id));
+            boolean check = productDAO.deleteProduct(id);
             if (check) {
                 Toast.makeText(getContext(), "Xoá sản phẩm thành công", Toast.LENGTH_SHORT).show();
                 listProducts = productDAO.getAllProducts();
@@ -308,9 +332,9 @@ public class SanPhamFragment extends Fragment {
 
 
     private void openImagePickerForUpdate() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
+        Intent intent = new Intent(Intent.ACTION_PICK,  MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
-        startActivityForResult(intent, 102);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
     private byte[] imageUriToByteArray(Uri uri) {

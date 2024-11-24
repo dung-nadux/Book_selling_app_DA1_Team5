@@ -82,7 +82,7 @@ public class AdapterOrderPayment extends RecyclerView.Adapter<AdapterOrderPaymen
             new AlertDialog.Builder(context)
                     .setTitle("Bạn có muốn bỏ sản phẩm này không?")
                     .setPositiveButton("Có", (dialog, which) -> {
-                        cartDAO.deleteCart(product.getId());
+//                        cartDAO.deleteCart(product.getId());
                         list.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, list.size());

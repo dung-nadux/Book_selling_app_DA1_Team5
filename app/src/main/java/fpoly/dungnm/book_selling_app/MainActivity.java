@@ -65,9 +65,9 @@ public class MainActivity extends AppCompatActivity {
                         intent.putExtra("role", finalCheckRole);
                         startActivity(intent);
                         finish();
+                        Toast.makeText(getApplicationContext(), "Đăng nhập thành công!", Toast.LENGTH_LONG).show();
                     }
                 }, 3000); // 3000 milliseconds = 3 seconds
-                Toast.makeText(getApplicationContext(), "Đăng nhập thành công!", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(getApplicationContext(), "Phiên đăng nhập hết hạn hãy đăng nhập lại", Toast.LENGTH_LONG).show();
             }

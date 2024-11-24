@@ -1,6 +1,7 @@
 package fpoly.dungnm.book_selling_app.pages.productdetail;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ Button btn_add_to_cart;
 CartDAO cartDAO;
     ModelProducts product;
     ProductDAO productDAO;
+    private int USER_ID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,8 +57,10 @@ CartDAO cartDAO;
         // Nhận productId từ Intent
         int productId = getIntent().getIntExtra("productId", -1);
         int productId2 = getIntent().getIntExtra("cartID", -1);
+        SharedPreferences sharedPreferences = getSharedPreferences("CHECK_LOGIN", MODE_PRIVATE);
+        USER_ID = sharedPreferences.getInt("USER_ID", -1);
 
-//        Toast.makeText(this, "productId: " + productId, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "productId: " + productId+" productId2: "+productId2, Toast.LENGTH_SHORT).show();
 
         // Kiểm tra productId và lấy dữ liệu từ CSDL
         if (productId != -1) {
@@ -107,8 +111,8 @@ CartDAO cartDAO;
         btn_add_to_cart.setOnClickListener(v -> {
             if (product != null) {
                 // Đảm bảo mỗi lần thêm, số lượng tối thiểu là 1
-//                product.setQuantity(1);
-                boolean check = cartDAO.insertOrUpdateCart(product);
+                product.setQuantity(1);
+                boolean check = cartDAO.insertOrUpdateCart(product , USER_ID);
                 if (check) {
                     Toast.makeText(this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
                 } else {

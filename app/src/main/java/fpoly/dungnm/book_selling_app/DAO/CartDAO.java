@@ -9,6 +9,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import fpoly.dungnm.book_selling_app.database.DBHelper;
+import fpoly.dungnm.book_selling_app.models.ModelCart;
 import fpoly.dungnm.book_selling_app.models.ModelProducts;
 
 public class CartDAO {
@@ -20,95 +21,41 @@ public class CartDAO {
         database = dbHelper.getWritableDatabase();
     }
 
-    public ArrayList<ModelProducts> getAllCart() {
-        ArrayList<ModelProducts> productList = new ArrayList<>();
+    public ArrayList<ModelCart> getAllCart() {
+        ArrayList<ModelCart> cartList = new ArrayList<>();
         database = dbHelper.getReadableDatabase();
         Cursor cursor = database.rawQuery("SELECT * FROM CART", null);
         if (cursor.moveToFirst()) {
             do {
-                // Chuyển đổi image từ byte array
-                byte[] imageBytes = cursor.getBlob(1);
-                productList.add(new ModelProducts(
-                        cursor.getInt(0),      // id
-                        imageBytes,                     // image
-                        cursor.getString(2),   // title
-                        cursor.getString(3),   // author
-                        cursor.getInt(4),      // price
-                        cursor.getString(5),   // description
-                        cursor.getString(6),   // category
-                        cursor.getInt(7)       // quantity
+                cartList.add(new ModelCart(
+                        cursor.getInt(0),      // userID
+                        cursor.getInt(1),     // bookID
+                        cursor.getInt(2),   // quantity
+                        cursor.getDouble(3)  // amount
                 ));
             } while (cursor.moveToNext());
         }
         cursor.close();
-        return productList;
+        return cartList;
     }
 
-    // Thêm sản phẩm mới
-//     public boolean insertCart(ModelProducts product) {
-//         ContentValues values = new ContentValues();
-// //        values.put("id", product.getId()); // Đảm bảo rằng bạn đã có trường id trong database
-//         values.put("image", product.getImage());  // Chuyển ảnh vào BLOB
-//         values.put("title", product.getTitle());
-//         values.put("author", product.getAuthor());
-//         values.put("price", product.getPrice());
-//         values.put("description", product.getDescription());
-//         values.put("category", product.getCategory());
-//         long result = database.insert("CART", null, values);
-//         if (result == -1) {
-//             Log.e("CartDAO", "Lỗi khi thêm sản phẩm vào giỏ hàng");
-//             return false;
-//         }
-//         return true;
-//     }
-//    public boolean insertOrUpdateCart(ModelProducts product) {
-//        // Lấy sản phẩm từ giỏ hàng theo ID
-//        ModelProducts existingProduct = getCartById(product.getId());
-//        if (existingProduct != null) {
-//            // Nếu đã tồn tại, cộng thêm số lượng
-//            int newQuantity = existingProduct.getQuantity() + 1; // Tăng số lượng thêm 1
-//            return updateQuantity(product.getId(), newQuantity);
-//        } else {
-//            // Nếu chưa tồn tại, thêm sản phẩm mới với số lượng là 1
-//            ContentValues values = new ContentValues();
-//            values.put("id", product.getId());
-//            values.put("image", product.getImage());
-//            values.put("title", product.getTitle());
-//            values.put("author", product.getAuthor());
-//            values.put("price", product.getPrice());
-//            values.put("description", product.getDescription());
-//            values.put("category", product.getCategory());
-//            values.put("quantity", 1); // Đặt số lượng mặc định là 1
-//
-//            long result = database.insert("CART", null, values);
-//            if (result == -1) {
-//                Log.e("CartDAO", "Lỗi khi thêm sản phẩm vào giỏ hàng");
-//                return false;
-//            }
-//            return true;
-//        }
-//    }
-
-    public boolean insertOrUpdateCart(ModelProducts product) {
+    public boolean insertOrUpdateCart(ModelProducts product, int userID) {
         // Lấy sản phẩm từ giỏ hàng theo ID
-        ModelProducts existingProduct = getCartById(product.getId());
-        if (existingProduct != null) {
-            // Nếu sản phẩm đã tồn tại, tăng số lượng lên
-            int newQuantity = product.getQuantity() + 1;
-            return updateQuantity(product.getId(), newQuantity);
+        ModelCart existingCart = getCartById(userID, product.getId());
+        if (existingCart != null) {
+            Log.e("CartDAO", "Có cart");
+            // Nếu đã tồn tại, cộng thêm số lượng
+            int newQuantity = existingCart.getQuantity() + 1; // Tăng số lượng thêm 1
+            double newAmount = existingCart.getAmount() + product.getPrice(); // Tăng giá trị amount
+            return updateQuantity(userID, product.getId(), newQuantity, newAmount);
         } else {
-            // Nếu sản phẩm chưa tồn tại, thêm mới với số lượng ban đầu
+            // Nếu chưa tồn tại, thêm sản phẩm mới với số lượng là 1
             ContentValues values = new ContentValues();
-            values.put("id", product.getId());
-            values.put("image", product.getImage());
-            values.put("title", product.getTitle());
-            values.put("author", product.getAuthor());
-            values.put("price", product.getPrice());
-            values.put("description", product.getDescription());
-            values.put("category", product.getCategory());
-            values.put("quantity", product.getQuantity()+1); // Đặt số lượng từ sản phẩm đầu vào
-            
-            Log.e("2222222222222", "insertOrUpdateCart: "+product.getQuantity() );
+            values.put("UserID", userID);
+            values.put("BookID", product.getId());
+            values.put("quantity", 1); // Đặt số lượng là 1
+            values.put("amount", product.getPrice()); // Đặt giá trị amount
+
             long result = database.insert("CART", null, values);
             if (result == -1) {
                 Log.e("CartDAO", "Lỗi khi thêm sản phẩm vào giỏ hàng");
@@ -120,56 +67,39 @@ public class CartDAO {
 
 
 
-    public boolean updateQuantity(int productId, int quantity) {
-    ContentValues values = new ContentValues();
-    values.put("quantity", quantity); // Update the quantity
-
-    int result = database.update("CART", values, "id = ?", new String[]{String.valueOf(productId)});
-    return result > 0;
-}
-
-
-    // Cập nhật thông tin sản phẩm
-    public boolean updateCart(ModelProducts product) {
+    public boolean updateQuantity(int userID, int productId, int quantity, double amount) {
         ContentValues values = new ContentValues();
-        values.put("image", product.getImage());  // Chuyển ảnh vào BLOB
-        values.put("title", product.getTitle());
-        values.put("author", product.getAuthor());
-        values.put("price", product.getPrice());
-        values.put("description", product.getDescription());
-        values.put("category", product.getCategory());
-        int result = database.update("CART", values, "id = ?", new String[]{String.valueOf(product.getId())});
+        values.put("quantity", quantity); // Update the quantity
+        values.put("amount", amount); // Update the amount
+
+        int result = database.update("CART", values, "UserID = ? AND BookID = ?", new String[]{String.valueOf(userID),String.valueOf(productId)});
         return result > 0;
     }
 
     // Xóa sản phẩm
-    public boolean deleteCart(int id) {
-        int result = database.delete("CART", "id = ?", new String[]{String.valueOf(id)});
+    public boolean deleteCart(int userID,int bookID) {
+        int result = database.delete("CART", "UserID = ? AND BookID = ?", new String[]{String.valueOf(userID), String.valueOf(bookID)});
         return result > 0;
     }
 
     // Lấy sản phẩm theo ID
-    public ModelProducts getCartById(int id) {
-        ModelProducts product = null;
+    public ModelCart getCartById(int userID,int bookID) {
+        ModelCart cart = null;
         database = dbHelper.getReadableDatabase();
-        Cursor cursor = database.rawQuery("SELECT * FROM CART WHERE id = ?", new String[]{String.valueOf(id)});
+        Cursor cursor = database.rawQuery("SELECT * FROM CART WHERE UserID = ? AND BookID = ?", new String[]{String.valueOf(userID), String.valueOf(bookID)});
 
         if (cursor != null && cursor.moveToFirst()) {
-            byte[] imageBytes = cursor.getBlob(1);
-            product = new ModelProducts(
-                    cursor.getInt(0),      // id
-                    imageBytes,            // image
-                    cursor.getString(2),   // title
-                    cursor.getString(3),   // author
-                    cursor.getInt(4),      // price
-                    cursor.getString(5),   // description
-                    cursor.getString(6)    // category
+            cart = new ModelCart(
+                    cursor.getInt(0),      // userID
+                    cursor.getInt(1),      // bookID
+                    cursor.getInt(2),      // quantity
+                    cursor.getDouble(3)    // amount
             );
         }
         if (cursor != null) {
             cursor.close();
         }
-        return product;
+        return cart;
     }
 
 }

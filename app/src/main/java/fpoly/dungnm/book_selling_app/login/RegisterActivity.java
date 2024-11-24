@@ -90,6 +90,16 @@ public class RegisterActivity extends AppCompatActivity {
             edtPassword.requestFocus();
             return;
         }
+        if (password.length() < 6) {
+            edtPassword.setError("Mật khẩu phải có ít nhất 6 ký tự");
+            edtPassword.requestFocus();
+            return;
+        }
+        if (confirmPassword.isEmpty()) {
+            edtConfirmPassword.setError("Xác nhận mật khẩu không được để trống");
+            edtConfirmPassword.requestFocus();
+            return;
+        }
         if (!password.equals(confirmPassword)) {
             edtConfirmPassword.setError("Xac nhan mật khẩu không được để trống");
             edtConfirmPassword.requestFocus();

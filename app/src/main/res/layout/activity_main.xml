@@ -20,7 +20,7 @@
         android:text="Chào mừng đến với GemStore!"
         android:textSize="24sp"
         android:textColor="#FFFFFF"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="300dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

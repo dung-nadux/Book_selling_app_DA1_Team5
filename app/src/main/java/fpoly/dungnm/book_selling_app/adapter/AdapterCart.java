@@ -1,9 +1,11 @@
 package fpoly.dungnm.book_selling_app.adapter;
 
+import static android.content.Context.MODE_PRIVATE;
 import static androidx.core.content.ContextCompat.startActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
@@ -25,19 +27,30 @@ import java.util.ArrayList;
 import fpoly.dungnm.book_selling_app.DAO.CartDAO;
 import fpoly.dungnm.book_selling_app.DAO.ProductDAO;
 import fpoly.dungnm.book_selling_app.R;
+import fpoly.dungnm.book_selling_app.models.ModelCart;
 import fpoly.dungnm.book_selling_app.models.ModelProducts;
 import fpoly.dungnm.book_selling_app.pages.order_payment.OrderPaymentActivity;
 import fpoly.dungnm.book_selling_app.pages.productdetail.ProductDetailsActivity;
 
 public class AdapterCart extends RecyclerView.Adapter<AdapterCart.ViewHoder> {
     Context context;
-    ArrayList<ModelProducts> list;
+    ArrayList<ModelCart> list;
     CartDAO cartDAO;
+    ProductDAO productDAO;
+    private int USER_ID;
+    private OnItemClickListener click;
 
-    public AdapterCart(Context context, ArrayList<ModelProducts> listSanPham) {
+    public interface OnItemClickListener {
+        void onItemClick();
+    }
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.click = listener;
+    }
+    public AdapterCart(Context context, ArrayList<ModelCart> list) {
         this.context = context;
-        this.list = listSanPham;
+        this.list = list;
         cartDAO = new CartDAO(context);
+
     }
 
 
@@ -50,8 +63,15 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.ViewHoder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHoder holder, int position) {
-        ModelProducts product = list.get(position);
+        ModelCart cart = list.get(position);
+
+        productDAO = new ProductDAO(context);
+
+        ModelProducts product = productDAO.getProductById(cart.getBookID());
         byte[] imageBytes = product.getImage();
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences("CHECK_LOGIN", MODE_PRIVATE);
+        USER_ID = sharedPreferences.getInt("USER_ID", -1);
 
 //        Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
 //        holder.itemImage.setImageBitmap(bitmap);
@@ -66,7 +86,7 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.ViewHoder> {
         }
         holder.tvCartTitle.setText(product.getTitle());
         holder.tvCartPrice.setText(String.valueOf(product.getPrice()));
-        holder.tvCartQuantity.setText(String.valueOf(product.getQuantity()));
+        holder.tvCartQuantity.setText(String.valueOf(cart.getQuantity()));
 //        holder.tvCartQuantity.setText(product.getCategory());
 
         // Nếu có URL ảnh, bạn có thể sử dụng Glide hoặc Picasso để tải ảnh từ URL
@@ -84,17 +104,18 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.ViewHoder> {
         // Xóa sản phẩm khỏi giỏ hàng
         holder.imgDeleteProduct.setOnClickListener(v -> {
             new AlertDialog.Builder(context)
-                    .setTitle("Bạn có muốn xóa sản phẩm này không?")
-                    .setPositiveButton("Có", (dialog, which) -> {
-                        cartDAO.deleteCart(product.getId());
-                        list.remove(position);
-                        notifyItemRemoved(position);
-                        notifyItemRangeChanged(position, list.size());
-                            })
-                    .setNegativeButton("Không", (dialog, which) -> {
-                        dialog.dismiss();
-                    })
-                    .create().show();
+                .setTitle("Bạn có muốn xóa sản phẩm này không?")
+                .setPositiveButton("Có", (dialog, which) -> {
+                    cartDAO.deleteCart(USER_ID, product.getId());
+                    list.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, list.size());
+                    click.onItemClick();
+                })
+                .setNegativeButton("Không", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .create().show();
         });
 
 //         Thêm sự kiện cho checkbox
@@ -106,28 +127,29 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.ViewHoder> {
         holder.cbCheck.setChecked(product.isSelected());
 
 
-        // Cập nhật số lượng từ đối tượng sản phẩm
-        holder.tvCartQuantity.setText(String.valueOf(product.getQuantity()));
-
         // Xử lý sự kiện khi nhấn nút +
         holder.btnIncrease.setOnClickListener(v -> {
-            int quantity = product.getQuantity();
-            product.setQuantity(quantity + 1); // Tăng số lượng
-            holder.tvCartQuantity.setText(String.valueOf(product.getQuantity())); // Cập nhật giao diện
+            int quantity = cart.getQuantity();
+            cart.setQuantity(quantity + 1); // Tăng số lượng
+            cart.setAmount(product.getPrice() * (quantity + 1));
+            holder.tvCartQuantity.setText(String.valueOf(cart.getQuantity())); // Cập nhật giao diện
 
             // Cập nhật vào cơ sở dữ liệu nếu cần
-            cartDAO.updateQuantity(product.getId(), quantity+1); // Giả sử bạn có phương thức này trong CartDAO
+            cartDAO.updateQuantity(USER_ID, product.getId(), cart.getQuantity(), cart.getAmount()); // Giả sử bạn có phương thức này trong CartDAO
+            click.onItemClick();
         });
 
         // Xử lý sự kiện khi nhấn nút -
         holder.btnDecrease.setOnClickListener(v -> {
-            int quantity = product.getQuantity();
-            if (quantity > 1) {
-                product.setQuantity(quantity - 1); // Giảm số lượng
-                holder.tvCartQuantity.setText(String.valueOf(product.getQuantity())); // Cập nhật giao diện
+            int quantity = cart.getQuantity();
+            if (quantity > 0) {
+                cart.setQuantity(quantity - 1); // Giảm số lượng
+                cart.setAmount(product.getPrice() * (quantity - 1));
+                holder.tvCartQuantity.setText(String.valueOf(cart.getQuantity())); // Cập nhật giao diện
 
                 // Cập nhật vào cơ sở dữ liệu nếu cần
-                cartDAO.updateQuantity(product.getId(), quantity-1); // Giả sử bạn có phương thức này trong CartDAO
+                cartDAO.updateQuantity(USER_ID, product.getId(), cart.getQuantity(), cart.getAmount()); // Giả sử bạn có phương thức này trong CartDAO
+                click.onItemClick();
             }
         });
 

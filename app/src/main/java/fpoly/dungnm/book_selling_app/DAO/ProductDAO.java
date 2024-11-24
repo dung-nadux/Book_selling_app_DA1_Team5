@@ -38,7 +38,8 @@ public class ProductDAO {
                         cursor.getString(3),   // author
                         cursor.getInt(4),      // price
                         cursor.getString(5),   // description
-                        cursor.getString(6)    // category
+                        cursor.getInt(6),    // category
+                        cursor.getInt(7)    // quantity
                 ));
             } while (cursor.moveToNext());
         }
@@ -56,6 +57,7 @@ public class ProductDAO {
         values.put("price", product.getPrice());
         values.put("description", product.getDescription());
         values.put("category", product.getCategory());
+        values.put("quantity", product.getQuantity());
         long result = database.insert("PRODUCTS", null, values);
 
         return result > 0;
@@ -71,6 +73,7 @@ public class ProductDAO {
         values.put("price", product.getPrice());
         values.put("description", product.getDescription());
         values.put("category", product.getCategory());
+        values.put("quantity", product.getQuantity());
         int result = database.update("PRODUCTS", values, "id = ?", new String[]{String.valueOf(product.getId())});
         return result > 0;
     }
@@ -96,7 +99,8 @@ public class ProductDAO {
                     cursor.getString(3),   // author
                     cursor.getInt(4),      // price
                     cursor.getString(5),   // description
-                    cursor.getString(6)    // category
+                    cursor.getInt(6),  // category
+                    cursor.getInt(7)    // quantity
             );
         }
         if (cursor != null) {
