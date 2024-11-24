@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,9 +17,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
+
 import fpoly.dungnm.book_selling_app.DAO.CartDAO;
+import fpoly.dungnm.book_selling_app.DAO.CategoryDAO;
 import fpoly.dungnm.book_selling_app.DAO.ProductDAO;
 import fpoly.dungnm.book_selling_app.R;
+import fpoly.dungnm.book_selling_app.models.ModelCategory;
 import fpoly.dungnm.book_selling_app.models.ModelProducts;
 
 public class ProductDetailsActivity extends AppCompatActivity {
@@ -28,6 +33,8 @@ Button btn_add_to_cart;
 CartDAO cartDAO;
     ModelProducts product;
     ProductDAO productDAO;
+    CategoryDAO categoryDAO;
+    ArrayList<ModelCategory> listCategory;
     private int USER_ID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +58,8 @@ CartDAO cartDAO;
         cartDAO = new CartDAO(this);
         product = new ModelProducts();
         productDAO = new ProductDAO(this);
+        categoryDAO = new CategoryDAO(this);
+        listCategory = categoryDAO.getAllCategory();
 
         imgBack1.setOnClickListener(v -> finish());
 
@@ -72,7 +81,13 @@ CartDAO cartDAO;
                 tvAuthor.setText("Tác giả: " + product.getAuthor());
                 book_price.setText(String.valueOf(product.getPrice()));
                 book_description.setText("Mô tả: " + product.getDescription());
-                tvCategory.setText("Thể loại: " + product.getCategory());
+                for (ModelCategory category : listCategory) {
+                    Log.e("checkCate", "idCate: " + category.getId() + " BookCate: "+product.getCategory());
+                    if (category.getId() == product.getCategory()) {
+                        tvCategory.setText("Thể loại: " + category.getCategoryName());
+                        break;
+                    }
+                }
 
                 // Hiển thị hình ảnh nếu có
                 byte[] productImageBytes = product.getImage();
@@ -95,7 +110,13 @@ CartDAO cartDAO;
                 tvAuthor.setText("Tác giả: " + product.getAuthor());
                 book_price.setText(String.valueOf(product.getPrice()));
                 book_description.setText("Mô tả: " + product.getDescription());
-                tvCategory.setText("Thể loại: " + product.getCategory());
+                for (ModelCategory category : listCategory) {
+                    Log.e("checkCate", "idCate: " + category.getId() + " BookCate: "+product.getCategory());
+                    if (category.getId() == product.getCategory()) {
+                        tvCategory.setText("Thể loại: " + category.getCategoryName());
+                        break;
+                    }
+                }
 
                 // Hiển thị hình ảnh nếu có
                 byte[] productImageBytes = product.getImage();
