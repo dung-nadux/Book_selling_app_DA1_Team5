@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 public class DBHelper extends SQLiteOpenHelper {
 
     public DBHelper(@Nullable Context context) {
-        super(context, "DBBookInfo", null, 4);
+        super(context, "DBBookInfo", null, 5);
     }
 
     @Override
@@ -20,7 +20,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "image BLOB, " + // Đổi từ TEXT sang BLOB
                 "title TEXT, " +
                 "author TEXT, " +
-                "price REAL, " +
+                "price DOUBLE, " +
                 "description TEXT, " +
                 "category INTEGER," +
                 "quantity INTEGER DEFAULT 1," +
@@ -37,7 +37,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "UserID INTEGER, " +
                 "BookID INTEGER, " +
                 "quantity INTEGER, " +
-                "Amount REAL, " +
+                "Amount DOUBLE, " +
                 "PRIMARY KEY (UserID, BookID), " +
                 "FOREIGN KEY (UserID) REFERENCES USER(id), " + // Khóa ngoại tới bảng USER
                 "FOREIGN KEY (BookID) REFERENCES PRODUCTS(id));"; // Khóa ngoại tới bảng PRODUCTS
@@ -53,6 +53,39 @@ public class DBHelper extends SQLiteOpenHelper {
                 "address TEXT, " +
                 "status INTEGER DEFAULT 1);";
         db.execSQL(createTableUser);
+
+        String createTableVoucher = "CREATE TABLE VOUCHER(" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "type TEXT," +
+                "discount INTEGER," +
+                "content TEXT," +
+                "startDate DATE," +
+                "endDate DATE)";
+        db.execSQL(createTableVoucher);
+
+        String createTableOrder = "CREATE TABLE ORDERS(" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "UserID INTEGER, " +
+                "discountVoucherID INTEGER," +
+                "shippingVoucherID INTEGER," +
+                "status TEXT," +
+                "totalPrice DOUBLE," +
+                "orderDate DATETIME DEFAULT CURRENT_TIMESTAMP," +
+                "FOREIGN KEY (UserID) REFERENCES USER(id)," +
+                "FOREIGN KEY (discountVoucherID) REFERENCES VOUCHER(id)," +
+                "FOREIGN KEY (shippingVoucherID) REFERENCES VOUCHER(id))";
+        db.execSQL(createTableOrder);
+
+        String createTableOrderDetail = "CREATE TABLE ORDERDETAIL(" +
+                "OrderID INTEGER, " +
+                "BookID INTEGER, " +
+                "quantity INTEGER, " +
+                "unitPrice DOUBLE," +
+                "Amount DOUBLE, " +
+                "PRIMARY KEY (OrderID, BookID), " +
+                "FOREIGN KEY (OrderID) REFERENCES ORDERS(id), " + // Khóa ngoại tới bảng USER
+                "FOREIGN KEY (BookID) REFERENCES PRODUCTS(id));"; // Khóa ngoại tới bảng PRODUCTS
+        db.execSQL(createTableOrderDetail);
 
         String insertCategory = "INSERT INTO CATEGORY (category) VALUES " +
                 "('Truyện tranh'), " +
@@ -82,6 +115,15 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String dropTable2 = "DROP TABLE IF EXISTS USER";
         db.execSQL(dropTable2);
+
+        String dropTable3 = "DROP TABLE IF EXISTS VOUCHER";
+        db.execSQL(dropTable3);
+
+        String dropTable4 = "DROP TABLE IF EXISTS ORDERS";
+        db.execSQL(dropTable4);
+
+        String dropTable5 = "DROP TABLE IF EXISTS ORDERDETAIL";
+        db.execSQL(dropTable5);
 
         onCreate(db);
     }

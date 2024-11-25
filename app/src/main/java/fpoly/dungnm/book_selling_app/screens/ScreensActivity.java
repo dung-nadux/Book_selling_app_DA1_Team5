@@ -37,6 +37,7 @@ import fpoly.dungnm.book_selling_app.screens.fragment.ProfileFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.SettingsFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.SupportFragment;
 import fpoly.dungnm.book_selling_app.screens.fragment.UserFragment;
+import fpoly.dungnm.book_selling_app.screens.fragment.VoucherFragment;
 
 public class ScreensActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     DrawerLayout drawerLayout;
@@ -67,6 +68,7 @@ public class ScreensActivity extends AppCompatActivity implements NavigationView
             navigationView.getMenu().findItem(R.id.nav_product).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_alalytics).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_user).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_voucher).setVisible(false);
         }else {
             navigationView.getMenu().findItem(R.id.nav_product).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_alalytics).setVisible(true);
@@ -138,7 +140,9 @@ public class ScreensActivity extends AppCompatActivity implements NavigationView
                 fragment = new ProductFragment();
             } else if (id == R.id.nav_alalytics) {
                 fragment = new AnalytistFragment();
-            }else if (id == R.id.nav_setting) {
+            } else if (id == R.id.nav_voucher) {
+                fragment = new VoucherFragment();
+            } else if (id == R.id.nav_setting) {
                 toolbar.setVisibility(View.VISIBLE);
                 fragment = new SettingsFragment();
             }else if (id == R.id.nav_support) {
