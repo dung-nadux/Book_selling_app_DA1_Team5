@@ -31,6 +31,11 @@
             android:title="Quản lý sản phẩm"
             android:icon="@drawable/product"/>
 
+<!--        <item-->
+<!--            android:id="@+id/nav_voucher"-->
+<!--            android:title="Voucher"-->
+<!--            android:icon="@drawable/ic_voucher"/>-->
+
         <item
             android:id="@+id/nav_alalytics"
             android:title="Thống kê"

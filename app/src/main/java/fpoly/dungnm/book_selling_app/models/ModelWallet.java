@@ -8,6 +8,16 @@ public class ModelWallet {
     public ModelWallet(int id, double pay) {
         this.id = id;
         this.pay = pay;
+
+//    private int userId;
+//    private double balance;
+//
+//    public ModelWallet() {
+//    }
+//    public ModelWallet(int userId, double balance) {
+//        this.userId = userId;
+//        this.balance = balance;
+
     }
 
     public int getUserId() {
@@ -17,6 +27,7 @@ public class ModelWallet {
     public void setUserId(int userId) {
         this.userId = userId;
     }
+
 
     public ModelWallet(double pay) {
         this.pay = pay;
@@ -39,5 +50,13 @@ public class ModelWallet {
 
     public void setPay(double pay) {
         this.pay = pay;
+
+//    public double getBalance() {
+//        return balance;
+//    }
+//
+//    public void setBalance(double balance) {
+//        this.balance = balance;
+
     }
 }
