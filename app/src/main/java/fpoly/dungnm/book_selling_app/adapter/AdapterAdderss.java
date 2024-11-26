@@ -1,5 +1,8 @@
 package fpoly.dungnm.book_selling_app.adapter;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +38,16 @@ public class AdapterAdderss extends RecyclerView.Adapter<AdapterAdderss.ViewHold
         this.addressDAO = new AddressDAO(context);
     }
 
+    public interface OnItemClickListener {
+        void onEdit(ModelAddres address);
+        void onDelete(ModelAddres address);
+        void onUse(ModelAddres address);
+    }
+    public void setOnItemClickListener(OnItemClickListener click) {
+        this.click = click;
+    }
+    private OnItemClickListener click;
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -54,14 +67,19 @@ public class AdapterAdderss extends RecyclerView.Adapter<AdapterAdderss.ViewHold
         // Xử lý khi nhấn vào item
         holder.itemView.setOnClickListener(v -> showEditDialog(holder.getAdapterPosition()));
 
-        holder.btnUse.setOnClickListener(v -> {
-            Intent intent = new Intent(context, OrderPaymentActivity.class);
-            intent.putExtra("fullname", address.getFullName());
-            intent.putExtra("phone", address.getPhone() + "");
-            intent.putExtra("address", address.getAddress());
-//            Log.e(TAG, "onBindViewHolder: ", );
-            context.startActivity(intent);
-        });
+//        holder.btnUse.setOnClickListener(v -> {
+//            Intent intent = new Intent(context, OrderPaymentActivity.class);
+//            intent.putExtra("fullname", address.getFullName());
+//            intent.putExtra("phone", address.getPhone() + "");
+//            intent.putExtra("address", address.getAddress());
+////            Log.e(TAG, "onBindViewHolder: ", );
+//            context.startActivity(intent);
+////            setResult(RESULT_OK, resultIntent);
+////            finish();
+//            // Kiểm tra context là một Activity trước khi gọi finish()
+//
+//        });
+        holder.btnUse.setOnClickListener(v -> click.onUse(address));
 
         // Xóa sản phẩm khỏi giỏ hàng
         holder.itemView.setOnLongClickListener(v -> {

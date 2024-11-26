@@ -1,6 +1,7 @@
 package fpoly.dungnm.book_selling_app.pages.crud_frofile.crud_adress;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,8 @@ import fpoly.dungnm.book_selling_app.R;
 import fpoly.dungnm.book_selling_app.adapter.AdapterAdderss;
 import fpoly.dungnm.book_selling_app.adapter.AdapterHomeProducts;
 import fpoly.dungnm.book_selling_app.models.ModelAddres;
+import fpoly.dungnm.book_selling_app.pages.order_payment.OrderPaymentActivity;
+import fpoly.dungnm.book_selling_app.pages.productdetail.ProductDetailsActivity;
 
 public class AdressActivity extends AppCompatActivity {
     RecyclerView rcvAdress;
@@ -65,6 +68,29 @@ public class AdressActivity extends AppCompatActivity {
         imgBackProfile.setOnClickListener(v -> {
             finish();
         });
+
+        adapterAdderss.setOnItemClickListener(new AdapterAdderss.OnItemClickListener() {
+            @Override
+            public void onEdit(ModelAddres address) {
+
+            }
+
+            @Override
+            public void onDelete(ModelAddres address) {
+
+            }
+
+            @Override
+            public void onUse(ModelAddres address) {
+                // Trả danh sách sản phẩm về
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("fullname", address.getFullName());
+                resultIntent.putExtra("phone", address.getPhone() + "");
+                resultIntent.putExtra("address", address.getAddress());
+                setResult(RESULT_OK, resultIntent);
+                finish();
+            }
+        });
     }
 
     private void dialogAddAdress() {
@@ -84,6 +110,12 @@ public class AdressActivity extends AppCompatActivity {
             // Kiểm tra thông tin nhập
             if (enterAdress.isEmpty() || fullName.isEmpty() || phoneStr.isEmpty()) {
                 Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String phonePattern = "^[0-9]{10}$";
+            if (!phoneStr.matches(phonePattern)) {
+                Toast.makeText(this, "Số điện thoại không hợp lệ", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -114,5 +146,7 @@ public class AdressActivity extends AppCompatActivity {
         Dialog dialog = builder.create();
         dialog.show();
     }
+
+
 
 }

@@ -120,12 +120,11 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.ViewHoder> {
 
 //         Thêm sự kiện cho checkbox
         holder.cbCheck.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            product.setSelected(isChecked); // Cập nhật trạng thái đã chọn
+            cart.setSelected(isChecked); // Cập nhật trạng thái đã chọn
         });
         
         // Ensure the checkbox reflects the current state
-        holder.cbCheck.setChecked(product.isSelected());
-
+        holder.cbCheck.setChecked(cart.isSelected());
 
         // Xử lý sự kiện khi nhấn nút +
         holder.btnIncrease.setOnClickListener(v -> {

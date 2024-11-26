@@ -1,6 +1,9 @@
 package fpoly.dungnm.book_selling_app.screens.fragment;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -56,8 +59,11 @@ public class CartFragment extends Fragment {
         btnContinue = view.findViewById(R.id.btnCheckout);
         tvTotalPrice = view.findViewById(R.id.tvTotalPrice);
 
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("CHECK_LOGIN", MODE_PRIVATE);
+        int USER_ID = sharedPreferences.getInt("USER_ID", -1);
+
         cartDAO = new CartDAO(getContext());
-        listCart = cartDAO.getAllCart();
+        listCart = cartDAO.getAllCart(USER_ID);
 
         // Cập nhật tổng giá tiền
         updateTotalPrice();
@@ -91,7 +97,7 @@ public class CartFragment extends Fragment {
 
             // Lấy các sản phẩm đã được chọn
             for (ModelCart cart : listCart) {
-                if (cart.getQuantity() > 0) {
+                if (cart.isSelected()) {
                     selectedProducts.add(cart);
                 }
             }
@@ -104,7 +110,7 @@ public class CartFragment extends Fragment {
 
             // Chuyển danh sách sản phẩm đã chọn sang màn hình thanh toán
             Intent intent = new Intent(getContext(), OrderPaymentActivity.class);
-//            intent.putParcelableArrayListExtra("selectedProducts", selectedProducts);
+            intent.putParcelableArrayListExtra("selectedCarts", selectedProducts);
             startActivity(intent);
         });
 
@@ -115,6 +121,6 @@ public class CartFragment extends Fragment {
         for (ModelCart cart : listCart) {
             totalPrice += cart.getAmount();
         }
-        tvTotalPrice.setText(String.valueOf(totalPrice));
+        tvTotalPrice.setText(String.format("%,.0f", totalPrice )+ "VNĐ");
     }
 }

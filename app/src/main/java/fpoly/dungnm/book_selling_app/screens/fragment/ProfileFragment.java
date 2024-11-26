@@ -16,11 +16,13 @@ import android.widget.LinearLayout;
 import fpoly.dungnm.book_selling_app.MainActivity;
 import fpoly.dungnm.book_selling_app.R;
 import fpoly.dungnm.book_selling_app.pages.crud_frofile.crud_adress.AdressActivity;
+import fpoly.dungnm.book_selling_app.pages.crud_frofile.crud_wallet.WalletActivity;
+import fpoly.dungnm.book_selling_app.pages.crud_frofile.voucher.VoucherActivity;
 import fpoly.dungnm.book_selling_app.screens.ScreensActivity;
 
 public class ProfileFragment extends Fragment {
     ImageView imgBackProfile;
-    LinearLayout llAdress;
+    LinearLayout llAdress,llPayment,llVoucher1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,6 +36,8 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         imgBackProfile = view.findViewById(R.id.imgBackProfile);
         llAdress = view.findViewById(R.id.llAdress);
+        llPayment = view.findViewById(R.id.llPayment);
+        llVoucher1 = view.findViewById(R.id.llVoucher1);
 
         imgBackProfile.setOnClickListener(v -> {
 //            requireActivity().onBackPressed(); // Quay lại màn hình trước
@@ -42,6 +46,16 @@ public class ProfileFragment extends Fragment {
 
         llAdress.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), AdressActivity.class);
+            startActivity(intent);
+        });
+
+        llPayment.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), WalletActivity.class);
+            startActivity(intent);
+        });
+
+        llVoucher1.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), VoucherActivity.class);
             startActivity(intent);
         });
 

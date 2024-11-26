@@ -21,23 +21,41 @@ public class CartDAO {
         database = dbHelper.getWritableDatabase();
     }
 
-    public ArrayList<ModelCart> getAllCart() {
-        ArrayList<ModelCart> cartList = new ArrayList<>();
-        database = dbHelper.getReadableDatabase();
-        Cursor cursor = database.rawQuery("SELECT * FROM CART", null);
-        if (cursor.moveToFirst()) {
-            do {
-                cartList.add(new ModelCart(
-                        cursor.getInt(0),      // userID
-                        cursor.getInt(1),     // bookID
-                        cursor.getInt(2),   // quantity
-                        cursor.getDouble(3)  // amount
-                ));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return cartList;
+//    public ArrayList<ModelCart> getAllCart() {
+//        ArrayList<ModelCart> cartList = new ArrayList<>();
+//        database = dbHelper.getReadableDatabase();
+//        Cursor cursor = database.rawQuery("SELECT * FROM CART", null);
+//        if (cursor.moveToFirst()) {
+//            do {
+//                cartList.add(new ModelCart(
+//                        cursor.getInt(0),      // userID
+//                        cursor.getInt(1),     // bookID
+//                        cursor.getInt(2),   // quantity
+//                        cursor.getDouble(3)  // amount
+//                ));
+//            } while (cursor.moveToNext());
+//        }
+//        cursor.close();
+//        return cartList;
+//    }
+public ArrayList<ModelCart> getAllCart(int userId) {
+    ArrayList<ModelCart> cartList = new ArrayList<>();
+    database = dbHelper.getReadableDatabase();
+    Cursor cursor = database.rawQuery("SELECT * FROM CART WHERE UserID = ?", new String[]{String.valueOf(userId)});
+    if (cursor.moveToFirst()) {
+        do {
+            cartList.add(new ModelCart(
+                    cursor.getInt(0),      // userID
+                    cursor.getInt(1),      // bookID
+                    cursor.getInt(2),      // quantity
+                    cursor.getDouble(3)    // amount
+            ));
+        } while (cursor.moveToNext());
     }
+    cursor.close();
+    return cartList;
+}
+
 
     public boolean insertOrUpdateCart(ModelProducts product, int userID) {
         // Lấy sản phẩm từ giỏ hàng theo ID

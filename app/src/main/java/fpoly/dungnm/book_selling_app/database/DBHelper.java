@@ -64,8 +64,54 @@ public class DBHelper extends SQLiteOpenHelper {
 
         // Thêm dữ liệu vào bảng USER
         String insertUser = "INSERT INTO USER (email, password, fullname, phone, address) VALUES " +
-                "('admin@gmail.com', 'admin@', 'Admin', '0123456789','Book Selling');";
+                "('admin@gmail.com', 'admin@', 'Admin', '0123456789','Book Selling')," +
+                "('loi001@gmail.com', 'loi001', 'loi', '0123456789','Book Selling')"
+                ;
         db.execSQL(insertUser);
+
+
+        String createTablePay = "CREATE TABLE PAY(" +
+                "id INTEGER PRIMARY KEY , " +
+                "UserID INTEGER, " +
+                "pay REAL, "+
+                "FOREIGN KEY (UserID) REFERENCES USER(id) " +
+                ");";
+        db.execSQL(createTablePay);
+
+        String createTableAdress = "CREATE TABLE ADDRESS(" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//                "UserID INTEGER, " +
+                "fullname TEXT, "+
+                "phone INTEGER, "+
+                "address TEXT ," +
+                "FOREIGN KEY (UserID) REFERENCES USER(id) " +
+                ");";
+        db.execSQL(createTableAdress);
+
+        String createOrdersTable = "CREATE TABLE ORDERS(" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "UserID INTEGER, " +
+                "address TEXT, " +
+                "total_amount REAL, " +
+                "payment_method TEXT, " +
+                "created_at INTEGER," +
+                "status TEXT, "+
+                "date TEXT," +
+                "FOREIGN KEY (UserID) REFERENCES USER(id) " +
+                ")";
+        db.execSQL(createOrdersTable);
+
+        String createOrderDetailsTable = "CREATE TABLE OrderDetails (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "order_id INTEGER, " +
+                "product_name TEXT, " +
+//                "product_id INTEGER, " +
+                "quantity INTEGER, " +
+//                "price REAL, " +
+                "FOREIGN KEY(order_id) REFERENCES ORDERS(id)" +
+//                "FOREIGN KEY(product_id) REFERENCES PRODUCTS(id)" +
+                ")";
+        db.execSQL(createOrderDetailsTable);
     }
 
     @Override
@@ -82,6 +128,20 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String dropTable2 = "DROP TABLE IF EXISTS USER";
         db.execSQL(dropTable2);
+
+        String dropTable3 = "DROP TABLE IF EXISTS PAY";
+        db.execSQL(dropTable3);
+
+        String dropTable6 = "DROP TABLE IF EXISTS ADDRESS";
+        db.execSQL(dropTable6);
+
+        String dropTable4 = "DROP TABLE IF EXISTS ORDERS";
+        db.execSQL(dropTable4);
+
+        String dropTable5 = "DROP TABLE IF EXISTS OrderDetails";
+        db.execSQL(dropTable5);
+
+
 
         onCreate(db);
     }

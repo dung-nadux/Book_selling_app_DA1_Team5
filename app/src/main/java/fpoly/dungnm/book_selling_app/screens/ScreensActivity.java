@@ -73,6 +73,7 @@ public class ScreensActivity extends AppCompatActivity implements NavigationView
             navigationView.getMenu().findItem(R.id.nav_user).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_cart).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_order).setVisible(false);
+
         }
 
 

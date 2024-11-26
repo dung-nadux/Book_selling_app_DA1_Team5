@@ -133,6 +133,7 @@
                 android:layout_marginEnd="10dp"/>
 
             <LinearLayout
+                android:id="@+id/llPayment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
@@ -169,6 +170,7 @@
                 android:layout_marginEnd="10dp"/>
 
             <LinearLayout
+                android:id="@+id/llVoucher1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
