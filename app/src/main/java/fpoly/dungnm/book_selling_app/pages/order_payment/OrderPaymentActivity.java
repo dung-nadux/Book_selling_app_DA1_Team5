@@ -86,6 +86,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Không nhận được thông tin địa chỉ!", Toast.LENGTH_SHORT).show();
             }
+            Toast.makeText(this, "Không nhận được thông tin địa chỉ!", Toast.LENGTH_SHORT).show();
         }
 
 

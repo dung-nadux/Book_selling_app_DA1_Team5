@@ -25,9 +25,9 @@ import fpoly.dungnm.book_selling_app.models.ModelAddres;
 import fpoly.dungnm.book_selling_app.pages.order_payment.OrderPaymentActivity;
 
 public class AdapterAdderss extends RecyclerView.Adapter<AdapterAdderss.ViewHolder> {
-    private final Context context;
-    private final ArrayList<ModelAddres> addressList;
-    private final AddressDAO addressDAO;
+     final Context context;
+     final ArrayList<ModelAddres> addressList;
+     final AddressDAO addressDAO;
 
     public AdapterAdderss(Context context, ArrayList<ModelAddres> addressList) {
         this.context = context;
@@ -129,7 +129,7 @@ public class AdapterAdderss extends RecyclerView.Adapter<AdapterAdderss.ViewHold
                     Toast.makeText(context, "Cập nhật địa chỉ thất bại", Toast.LENGTH_SHORT).show();
                 }
             } catch (NumberFormatException e) {
-                Toast.makeText(context, "Số điện thoại không hợp lệ", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "Số điện thoại không hợp lệ", Toast.LENGTH_SHORT).show();
             }
         });
 

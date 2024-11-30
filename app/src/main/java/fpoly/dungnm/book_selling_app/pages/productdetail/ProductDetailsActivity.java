@@ -100,6 +100,34 @@ CartDAO cartDAO;
             }
         }
 
+//        if (productId != -1) {
+//            product = productDAO.getProductById(productId);
+//
+//            if (product != null) {
+//                // Hiển thị dữ liệu lên giao diện
+//                book_title.setText(product.getTitle());
+//                tvAuthor.setText("Tác giả: " + product.getAuthor());
+//                book_price.setText(String.valueOf(product.getPrice()));
+//                book_description.setText("Mô tả: " + product.getDescription());
+//                for (ModelCategory category : listCategory) {
+//                    Log.e("checkCate", "idCate: " + category.getId() + " BookCate: "+product.getCategory());
+//                    if (category.getId() == product.getCategory()) {
+//                        tvCategory.setText("Thể loại: " + category.getCategoryName());
+//                        break;
+//                    }
+//                }
+//
+//                // Hiển thị hình ảnh nếu có
+//                byte[] productImageBytes = product.getImage();
+//                if (productImageBytes != null && productImageBytes.length > 0) {
+//                    Bitmap bitmap = BitmapFactory.decodeByteArray(productImageBytes, 0, productImageBytes.length);
+//                    book_image.setImageBitmap(bitmap);
+//                } else {
+//                    book_image.setImageResource(R.drawable.ic_launcher_background); // Hình ảnh mặc định nếu không có
+//                }
+//            }
+//        }
+
         // Kiểm tra productId và lấy dữ liệu từ CSDL
         if (productId2 != -1) {
             product = productDAO.getProductById(productId2);
