@@ -8,12 +8,20 @@ import androidx.annotation.Nullable;
 
 public class DBHelper extends SQLiteOpenHelper {
 
+
     public DBHelper(@Nullable Context context) {
         super(context, "DBBookInfo", null, 4);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        String createTableNotification = "CREATE TABLE NOTIFICATION (" +
+                "email TEXT NOT NULL, " +
+                "title TEXT NOT NULL, " +
+                "content TEXT NOT NULL, " +
+                "PRIMARY KEY (email, title), " +
+                "FOREIGN KEY (email) REFERENCES USER(email) ON DELETE CASCADE);";
+        db.execSQL(createTableNotification);
         // Tạo bảng PRODUCTS
         String createTableProduct = "CREATE TABLE PRODUCTS(" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -70,6 +78,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // Xóa các bảng khác...
+
+        // Xóa bảng NOTIFICATION
+        String dropTableNotification = "DROP TABLE IF EXISTS NOTIFICATION";
+        db.execSQL(dropTableNotification);
+
+        onCreate(db);
         // Xóa bảng nếu đã tồn tại và tạo lại
         String dropTable = "DROP TABLE IF EXISTS PRODUCTS";
         db.execSQL(dropTable);
