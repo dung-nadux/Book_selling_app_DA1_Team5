@@ -32,6 +32,7 @@ public class AdapterHomeProducts extends RecyclerView.Adapter<AdapterHomeProduct
         this.context = context;
         this.list = listSanPham;
         productDAO = new ProductDAO(context);
+
     }
 
 
@@ -58,6 +59,9 @@ public class AdapterHomeProducts extends RecyclerView.Adapter<AdapterHomeProduct
             // Hiển thị ảnh mặc định nếu không có ảnh
             holder.imgAvaterHome.setImageResource(android.R.drawable.ic_dialog_alert); // Ví dụ: ảnh mặc định
         }
+
+//        holder.tvTitleHome.setText(product.getTitle());
+//        holder.tvPriceHome.setText(product.getPrice()+"");
 
         holder.tvTitleHome.setText(product.getTitle());
         holder.tvPriceHome.setText(product.getPrice()+"");

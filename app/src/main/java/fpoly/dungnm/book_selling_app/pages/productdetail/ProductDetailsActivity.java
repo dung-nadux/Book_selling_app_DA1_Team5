@@ -158,6 +158,20 @@ CartDAO cartDAO;
         }
 
         btn_add_to_cart.setOnClickListener(v -> {
+
+//            if (product != null) {
+//                // Đảm bảo mỗi lần thêm, số lượng tối thiểu là 1
+//                product.setQuantity(1);
+//                boolean check = cartDAO.insertOrUpdateCart(product , USER_ID);
+//                if (check) {
+//                    Toast.makeText(this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(this, "Thêm vào giỏ hàng thất bại", Toast.LENGTH_SHORT).show();
+//                }
+//            } else {
+//                Toast.makeText(this, "Sản phẩm không tồn tại", Toast.LENGTH_SHORT).show();
+//            }
+
             if (product != null) {
                 // Đảm bảo mỗi lần thêm, số lượng tối thiểu là 1
                 product.setQuantity(1);
@@ -170,6 +184,7 @@ CartDAO cartDAO;
             } else {
                 Toast.makeText(this, "Sản phẩm không tồn tại", Toast.LENGTH_SHORT).show();
             }
+
         });
     }
 }

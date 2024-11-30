@@ -39,6 +39,7 @@ public class ModelProducts implements Parcelable {
         this.description = description;
         this.category = category;
         this.quantity = quantity;
+
     }
 
     public ModelProducts(int id, byte[] image, String title, String author, int price, String description, int category) {

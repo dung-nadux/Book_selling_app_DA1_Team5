@@ -37,6 +37,7 @@ public class AdapterProducts extends RecyclerView.Adapter<AdapterProducts.ViewHo
     ArrayList<ModelCategory> listCategory;
     ModelProducts product;
 
+
     public AdapterProducts(Context context, ArrayList<ModelProducts> listSanPham) {
         this.context = context;
         this.list = listSanPham;
@@ -59,6 +60,7 @@ public class AdapterProducts extends RecyclerView.Adapter<AdapterProducts.ViewHo
     public void setData(ArrayList<ModelProducts> ls) {
         this.list = ls;
         notifyDataSetChanged();
+
     }
 
     @NonNull
@@ -66,6 +68,7 @@ public class AdapterProducts extends RecyclerView.Adapter<AdapterProducts.ViewHo
     public ViewHoder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_product, parent, false);
         return new ViewHoder(view);
+
     }
 
     @Override

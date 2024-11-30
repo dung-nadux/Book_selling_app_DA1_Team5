@@ -73,22 +73,36 @@ public class SearchActivity extends AppCompatActivity implements Filterable {
 
         // nút back
         imgBack.setOnClickListener(v -> {
+
             onBackPressed();
         });
 
         // Lắng nghe sự kiện nhập liệu từ ô tìm kiếm và tìm kiếm trực tiếp , tự động
-         edSearch.getEditText().addTextChangedListener(new TextWatcher() {
-             @Override
-             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+//         edSearch.getEditText().addTextChangedListener(new TextWatcher() {
+//             @Override
+//             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+//
+//             @Override
+//             public void onTextChanged(CharSequence s, int start, int before, int count) {}
+//
+//             @Override
+//             public void afterTextChanged(Editable s) {
+//                 getFilter().filter(s.toString()); // Kích hoạt bộ lọc
+//             }
+//         });
 
-             @Override
-             public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        edSearch.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-             @Override
-             public void afterTextChanged(Editable s) {
-                 getFilter().filter(s.toString()); // Kích hoạt bộ lọc
-             }
-         });
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                getFilter().filter(s.toString()); // Kích hoạt bộ lọc
+            }
+        });
 
 // nhấn button để tìm kiếm
         btnSearch.setOnClickListener(v -> {

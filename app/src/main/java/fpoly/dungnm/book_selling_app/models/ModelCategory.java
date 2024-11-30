@@ -6,6 +6,8 @@ public class ModelCategory {
 
     public ModelCategory() {}
 
+
+
     public ModelCategory(int id, String categoryName) {
         this.id = id;
         this.categoryName = categoryName;
