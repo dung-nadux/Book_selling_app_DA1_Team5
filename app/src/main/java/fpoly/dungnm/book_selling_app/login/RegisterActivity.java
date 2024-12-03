@@ -133,7 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
             user.setFullname(username);
             user.setEmail(email);
             user.setPassword(password);
-            user.setPhone(Integer.parseInt(phone));
+            user.setPhone(phone);
             user.setAddress(address);
             user.setStatus(1);
 

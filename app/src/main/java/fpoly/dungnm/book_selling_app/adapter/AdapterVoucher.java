@@ -3,9 +3,11 @@ package fpoly.dungnm.book_selling_app.adapter;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -29,10 +31,20 @@ public class AdapterVoucher extends RecyclerView.Adapter<AdapterVoucher.VoucherH
     private Context mContext;
     private ArrayList<ModelVoucher> listVoucher;
     private VoucherDAO voucherDAO;
+    private String email;
+    private int selectedPosition = -1; // Lưu vị trí được chọn
     public AdapterVoucher(Context mContext, ArrayList<ModelVoucher> listVoucher) {
         this.mContext = mContext;
         this.listVoucher = listVoucher;
     }
+
+    public interface OnItemClickVoucher {
+        void onCheckVoucher(ModelVoucher modelVoucher);
+    }
+    public void setOnItemClickListener(OnItemClickVoucher click) {
+        this.click = click;
+    }
+    private OnItemClickVoucher click;
 
     @NonNull
     @Override
@@ -46,6 +58,8 @@ public class AdapterVoucher extends RecyclerView.Adapter<AdapterVoucher.VoucherH
     @Override
     public void onBindViewHolder(@NonNull VoucherHolder holder, int position) {
         ModelVoucher modelVoucher = listVoucher.get(position);
+        SharedPreferences preferences = mContext.getSharedPreferences("CHECK_LOGIN", Context.MODE_PRIVATE);
+        email = preferences.getString("EMAIL", "");
 
         if (modelVoucher.getType().equals("discount")) {
             holder.imageVoucher.setImageResource(R.drawable.img_voucher);
@@ -53,34 +67,53 @@ public class AdapterVoucher extends RecyclerView.Adapter<AdapterVoucher.VoucherH
             holder.imageVoucher.setImageResource(R.drawable.img_voucher_shipping);
         }
         holder.tvTitleVoucher.setText(modelVoucher.getContent());
-        holder.tvDiscountVoucher.setText(String.valueOf(modelVoucher.getDiscount()));
+        holder.tvDiscountVoucher.setText(modelVoucher.getDiscount()+"%");
+        holder.tv_from_date.setText("Từ ngày: "+modelVoucher.getStartDate());
+        holder.tv_to_date.setText("Đến ngày: "+modelVoucher.getEndDate());
 
-        holder.itemVoucher.setOnClickListener(v -> {
-            openDialogUpdateVoucher(modelVoucher);
-        });
+        if (email.equals("admin@gmail.com")) {
+            holder.itemVoucher.setOnClickListener(v -> {
+                openDialogUpdateVoucher(modelVoucher);
+            });
 
-        holder.itemVoucher.setOnLongClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            builder.setTitle("Xác nhận xóa");
-            builder.setMessage("Bạn có chắc chắn muốn xóa?");
-            builder.setPositiveButton("Có", (dialog, which) -> {
-                voucherDAO = new VoucherDAO(mContext);
-                if (voucherDAO.deleteVoucher(modelVoucher.getId())) {
-                    listVoucher.clear();
-                    listVoucher = voucherDAO.getAllVoucher();
-                    notifyDataSetChanged();
-                    Toast.makeText(mContext, "Xóa thành công", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(mContext, "Xóa thất bại", Toast.LENGTH_SHORT).show();
+            holder.itemVoucher.setOnLongClickListener(v -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle("Xác nhận xóa");
+                builder.setMessage("Bạn có chắc chắn muốn xóa?");
+                builder.setPositiveButton("Có", (dialog, which) -> {
+                    voucherDAO = new VoucherDAO(mContext);
+                    if (voucherDAO.deleteVoucher(modelVoucher.getId())) {
+                        listVoucher.clear();
+                        listVoucher = voucherDAO.getAllVoucher();
+                        notifyDataSetChanged();
+                        Toast.makeText(mContext, "Xóa thành công", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mContext, "Xóa thất bại", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.setNegativeButton("Không", (dialog, which) -> {
+                    dialog.dismiss();
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                return true;
+            });
+        } else {
+            holder.cb_chosse_voucher.setVisibility(View.VISIBLE);
+            holder.cb_chosse_voucher.setChecked(position == selectedPosition);
+            holder.cb_chosse_voucher.setOnClickListener(v -> {
+                // Cập nhật vị trí được chọn
+                selectedPosition = holder.getAdapterPosition();
+                notifyDataSetChanged(); // Làm mới danh sách
+
+                // Cập nhật trạng thái dữ liệu
+                for (int i = 0; i < listVoucher.size(); i++) {
+                    listVoucher.get(i).setChecked(i == selectedPosition);
                 }
+                click.onCheckVoucher(modelVoucher);
             });
-            builder.setNegativeButton("Không", (dialog, which) -> {
-                dialog.dismiss();
-            });
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
-            return true;
-        });
+        }
+
     }
 
     private void openDialogUpdateVoucher(ModelVoucher modelVoucher) {
@@ -172,13 +205,17 @@ public class AdapterVoucher extends RecyclerView.Adapter<AdapterVoucher.VoucherH
     public static class VoucherHolder extends RecyclerView.ViewHolder {
         RelativeLayout itemVoucher;
         ImageView imageVoucher;
-        TextView tvTitleVoucher, tvDiscountVoucher;
+        CheckBox cb_chosse_voucher;
+        TextView tvTitleVoucher, tvDiscountVoucher, tv_from_date, tv_to_date;
         public VoucherHolder(@NonNull View itemView) {
             super(itemView);
             itemVoucher = itemView.findViewById(R.id.itemVoucher);
             imageVoucher = itemView.findViewById(R.id.imageVoucher);
             tvTitleVoucher = itemView.findViewById(R.id.tvTitleVoucher);
             tvDiscountVoucher = itemView.findViewById(R.id.tvDiscountVoucher);
+            tv_from_date = itemView.findViewById(R.id.tv_from_date);
+            tv_to_date = itemView.findViewById(R.id.tv_to_date);
+            cb_chosse_voucher = itemView.findViewById(R.id.cb_chosse_voucher);
         }
     }
 }

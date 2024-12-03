@@ -15,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -120,29 +121,35 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.ViewHoder> {
 
 //         Thêm sự kiện cho checkbox
         holder.cbCheck.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            product.setSelected(isChecked); // Cập nhật trạng thái đã chọn
+            int check = isChecked ? 1 : 0;
+            cartDAO.updateStatus(USER_ID, product.getId(), check);
         });
         
         // Ensure the checkbox reflects the current state
-        holder.cbCheck.setChecked(product.isSelected());
+        holder.cbCheck.setChecked(cart.getStatus() == 1);
 
 
         // Xử lý sự kiện khi nhấn nút +
         holder.btnIncrease.setOnClickListener(v -> {
-            int quantity = cart.getQuantity();
-            cart.setQuantity(quantity + 1); // Tăng số lượng
-            cart.setAmount(product.getPrice() * (quantity + 1));
-            holder.tvCartQuantity.setText(String.valueOf(cart.getQuantity())); // Cập nhật giao diện
+            if (cart.getQuantity() < product.getQuantity()) {
+                int quantity = cart.getQuantity();
+                cart.setQuantity(quantity + 1); // Tăng số lượng
+                cart.setAmount(product.getPrice() * (quantity + 1));
+                holder.tvCartQuantity.setText(String.valueOf(cart.getQuantity())); // Cập nhật giao diện
 
-            // Cập nhật vào cơ sở dữ liệu nếu cần
-            cartDAO.updateQuantity(USER_ID, product.getId(), cart.getQuantity(), cart.getAmount()); // Giả sử bạn có phương thức này trong CartDAO
-            click.onItemClick();
+                // Cập nhật vào cơ sở dữ liệu nếu cần
+                cartDAO.updateQuantity(USER_ID, product.getId(), cart.getQuantity(), cart.getAmount()); // Giả sử bạn có phương thức này trong CartDAO
+                click.onItemClick();
+            } else {
+                Toast.makeText(context, "Số lượng không được vượt quá số lượng sản phẩm", Toast.LENGTH_SHORT).show();
+            }
+            
         });
 
         // Xử lý sự kiện khi nhấn nút -
         holder.btnDecrease.setOnClickListener(v -> {
             int quantity = cart.getQuantity();
-            if (quantity > 0) {
+            if (quantity > 1) {
                 cart.setQuantity(quantity - 1); // Giảm số lượng
                 cart.setAmount(product.getPrice() * (quantity - 1));
                 holder.tvCartQuantity.setText(String.valueOf(cart.getQuantity())); // Cập nhật giao diện
@@ -152,7 +159,6 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.ViewHoder> {
                 click.onItemClick();
             }
         });
-
 
     }
 

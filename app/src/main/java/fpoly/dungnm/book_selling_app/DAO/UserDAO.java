@@ -30,9 +30,18 @@ public class UserDAO {
         values.put("phone", user.getPhone());
         values.put("address", user.getAddress());
         values.put("status", user.getStatus());
-
         long result = database.insert("USER", null, values);
+        ContentValues values1 = new ContentValues();
+        values1.put("UserID", user.getId());
+        long result1 = database.insert("WALLET", null, values1);
         return result != -1;
+    }
+
+    public boolean updateWallet(ModelUser user, double balance) {
+        ContentValues values = new ContentValues();
+        values.put("balance", balance);
+        int result = database.update("WALLET", values, "UserID = ?", new String[]{String.valueOf(user.getId())});
+        return result > 0;
     }
 
     public boolean updateUser(ModelUser user) {
@@ -65,7 +74,7 @@ public class UserDAO {
                 user.setEmail(cursor.getString(cursor.getColumnIndex("email")));
                 user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
                 user.setFullname(cursor.getString(cursor.getColumnIndex("fullname")));
-                user.setPhone(cursor.getInt(cursor.getColumnIndex("phone")));
+                user.setPhone(cursor.getString(cursor.getColumnIndex("phone")));
                 user.setAddress(cursor.getString(cursor.getColumnIndex("address")));
                 user.setStatus(cursor.getInt(cursor.getColumnIndex("status")));
                 userList.add(user);
@@ -86,7 +95,7 @@ public class UserDAO {
             user.setEmail(cursor.getString(cursor.getColumnIndex("email")));
             user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
             user.setFullname(cursor.getString(cursor.getColumnIndex("fullname")));
-            user.setPhone(cursor.getInt(cursor.getColumnIndex("phone")));
+            user.setPhone(cursor.getString(cursor.getColumnIndex("phone")));
             user.setAddress(cursor.getString(cursor.getColumnIndex("address")));
             user.setStatus(cursor.getInt(cursor.getColumnIndex("status")));
         }
@@ -103,7 +112,7 @@ public class UserDAO {
             user.setEmail(cursor.getString(cursor.getColumnIndex("email")));
             user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
             user.setFullname(cursor.getString(cursor.getColumnIndex("fullname")));
-            user.setPhone(cursor.getInt(cursor.getColumnIndex("phone")));
+            user.setPhone(cursor.getString(cursor.getColumnIndex("phone")));
             user.setAddress(cursor.getString(cursor.getColumnIndex("address")));
             user.setStatus(cursor.getInt(cursor.getColumnIndex("status")));
         }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +20,10 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import fpoly.dungnm.book_selling_app.DAO.CategoryDAO;
 import fpoly.dungnm.book_selling_app.DAO.ProductDAO;
 import fpoly.dungnm.book_selling_app.R;
+import fpoly.dungnm.book_selling_app.models.ModelCategory;
 import fpoly.dungnm.book_selling_app.models.ModelProducts;
 import fpoly.dungnm.book_selling_app.pages.productdetail.ProductDetailsActivity;
 
@@ -28,6 +31,8 @@ public class AdapterSearchProducts extends RecyclerView.Adapter<AdapterSearchPro
     Context context;
     ArrayList<ModelProducts> list;
     ProductDAO productDAO;
+    CategoryDAO categoryDAO;
+    ArrayList<ModelCategory> listCategory;
 
     public AdapterSearchProducts(Context context, ArrayList<ModelProducts> listSanPham) {
         this.context = context;
@@ -46,6 +51,9 @@ public class AdapterSearchProducts extends RecyclerView.Adapter<AdapterSearchPro
     @Override
     public void onBindViewHolder(@NonNull ViewHoder holder, int position) {
         ModelProducts product = list.get(position);
+
+        categoryDAO = new CategoryDAO(context);
+        listCategory = categoryDAO.getAllCategory();
         byte[] imageBytes = product.getImage();
 
 //        Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
@@ -65,7 +73,13 @@ public class AdapterSearchProducts extends RecyclerView.Adapter<AdapterSearchPro
         holder.itemAuthor.setText(product.getAuthor());
         holder.itemPrice.setText(String.valueOf(product.getPrice()));
         holder.itemDescription.setText(product.getDescription());
-        holder.itemCategory.setText(product.getCategory());
+        for (ModelCategory category : listCategory) {
+            Log.e("checkCate", "idCate: " + category.getId() + " BookCate: "+product.getCategory());
+            if (category.getId() == product.getCategory()) {
+                holder.itemCategory.setText("Thể loại: " + category.getCategoryName());
+                break;
+            }
+        }
 
         // Nếu có URL ảnh, bạn có thể sử dụng Glide hoặc Picasso để tải ảnh từ URL
         Glide.with(context).load(product.getImage()).into(holder.itemImage);

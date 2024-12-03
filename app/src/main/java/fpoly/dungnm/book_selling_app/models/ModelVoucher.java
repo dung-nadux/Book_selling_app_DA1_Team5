@@ -1,14 +1,16 @@
 package fpoly.dungnm.book_selling_app.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ModelVoucher {
+public class ModelVoucher implements Serializable {
     private int id;
     private String type;
     private int discount;
     private String content;
     private String startDate;
     private String endDate;
+    private boolean isChecked;
 
     public ModelVoucher() {
     }
@@ -76,5 +78,13 @@ public class ModelVoucher {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 }

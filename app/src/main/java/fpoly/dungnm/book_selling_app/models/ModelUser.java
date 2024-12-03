@@ -5,14 +5,14 @@ public class ModelUser {
     private String email;
     private String password;
     private String fullname;
-    private int phone;
+    private String phone;
     private String address;
     private int status;
 
     public ModelUser() {
     }
 
-    public ModelUser(int id, String email, String password, String fullname, int phone, String address, int status) {
+    public ModelUser(int id, String email, String password, String fullname, String phone, String address, int status) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -54,11 +54,11 @@ public class ModelUser {
         this.fullname = fullname;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 

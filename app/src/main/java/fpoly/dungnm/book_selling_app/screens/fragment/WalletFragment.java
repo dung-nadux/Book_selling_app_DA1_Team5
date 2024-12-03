@@ -17,6 +17,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import fpoly.dungnm.book_selling_app.DAO.WalletDAO;
 import fpoly.dungnm.book_selling_app.R;
 import fpoly.dungnm.book_selling_app.models.ModelWallet;
@@ -28,6 +31,7 @@ public class WalletFragment extends Fragment {
     private TextView tvBalance;
     private WalletDAO walletDAO;
     private ImageView imgBackProfile;
+    private NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
     private int USER_ID;
     public WalletFragment() {
         // Required empty public constructor
@@ -69,7 +73,7 @@ public class WalletFragment extends Fragment {
                 return null;
             }
         }
-        tvBalance.setText(""+wallet.getBalance());
+        tvBalance.setText(formatter.format(wallet.getBalance())+"đ");
 
         itemWallet.setOnClickListener(v -> {
             openDialogUpdateWallet();

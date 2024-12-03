@@ -6,13 +6,22 @@
     android:layout_marginVertical="10dp"
     android:padding="15dp"
     android:id="@+id/itemVoucher"
+    android:elevation="2dp"
     android:background="#F1F1F1">
+
+    <CheckBox
+        android:id="@+id/cb_chosse_voucher"
+        android:layout_width="wrap_content"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:layout_height="wrap_content"/>
 
     <ImageView
         android:id="@+id/imageVoucher"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/cb_chosse_voucher"
         android:src="@drawable/img_voucher"/>
     <LinearLayout
         android:id="@+id/layoutVoucher"
@@ -36,5 +45,18 @@
             android:textSize="17sp"
             android:textStyle="bold"
             android:textColor="#F44336"/>
+        <TextView
+            android:id="@+id/tv_from_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2024-11-24"
+            android:textSize="13sp"/>
+        <TextView
+            android:id="@+id/tv_to_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2024-12-24"
+            android:textSize="13sp"/>
+
     </LinearLayout>
 </RelativeLayout>

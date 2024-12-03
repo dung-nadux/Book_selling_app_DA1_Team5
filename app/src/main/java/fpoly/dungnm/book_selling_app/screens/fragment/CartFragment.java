@@ -18,7 +18,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import fpoly.dungnm.book_selling_app.DAO.CartDAO;
 import fpoly.dungnm.book_selling_app.DAO.ProductDAO;
@@ -38,12 +40,11 @@ public class CartFragment extends Fragment {
     ImageView imgBackCart;
     CartDAO cartDAO;
     Button btnContinue;
+    NumberFormat formatter;
     double totalPrice = 0;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_cart, container, false);
     }
 
@@ -59,8 +60,12 @@ public class CartFragment extends Fragment {
         cartDAO = new CartDAO(getContext());
         listCart = cartDAO.getAllCart();
 
+        formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+
         // Cập nhật tổng giá tiền
         updateTotalPrice();
+        String formattedTotalPrice = formatter.format(totalPrice)+"đ";
+        tvTotalPrice.setText(formattedTotalPrice);
 
         // Thiết lập RecyclerView
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
@@ -76,6 +81,8 @@ public class CartFragment extends Fragment {
             @Override
             public void onItemClick() {
                 updateTotalPrice();
+                String formattedTotalPrice = formatter.format(totalPrice)+"đ";
+                tvTotalPrice.setText(formattedTotalPrice);
             }
         });
 
@@ -105,16 +112,17 @@ public class CartFragment extends Fragment {
             // Chuyển danh sách sản phẩm đã chọn sang màn hình thanh toán
             Intent intent = new Intent(getContext(), OrderPaymentActivity.class);
 //            intent.putParcelableArrayListExtra("selectedProducts", selectedProducts);
+            intent.putExtra("selectedProducts", selectedProducts);
             startActivity(intent);
         });
 
     }
 
-    private void updateTotalPrice() {
+    private double updateTotalPrice() {
         totalPrice = 0;
         for (ModelCart cart : listCart) {
             totalPrice += cart.getAmount();
         }
-        tvTotalPrice.setText(String.valueOf(totalPrice));
+        return totalPrice;
     }
 }

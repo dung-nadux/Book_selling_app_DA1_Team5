@@ -1,6 +1,8 @@
 package fpoly.dungnm.book_selling_app.pages.crud_frofile.crud_adress;
 
 import android.app.Dialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +36,7 @@ public class AdressActivity extends AppCompatActivity {
     ArrayList<ModelAddres> list = new ArrayList<>();
     AdapterAdderss adapterAdderss ;
     ImageView imgBackProfile;
+    private int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,19 +48,28 @@ public class AdressActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         rcvAdress = findViewById(R.id.rcvAdress);
         imgAddAdress = findViewById(R.id.imgAddAdress);
         imgBackProfile = findViewById(R.id.imgBackProfile);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("CHECK_LOGIN", MODE_PRIVATE);
+        userId = sharedPreferences.getInt("USER_ID", -1);
         addressDAO = new AddressDAO(this);
 
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rcvAdress.setLayoutManager(manager);
-
-        list = addressDAO.getAllAddresses();
-
+        list = addressDAO.getAllAddresses(userId);
         adapterAdderss = new AdapterAdderss(this, list);
-
         rcvAdress.setAdapter(adapterAdderss);
+
+        adapterAdderss.setOnItemClickListener(addres -> {
+            Intent intent = new Intent();
+            intent.putExtra("address", addres);
+            Toast.makeText(this, "Đã chọn địa chỉ: "+addres.getAddress(), Toast.LENGTH_SHORT).show();
+            setResult(RESULT_OK, intent);
+            finish();
+        });
 
         imgAddAdress.setOnClickListener(v -> {
             dialogAddAdress();
@@ -92,14 +104,14 @@ public class AdressActivity extends AppCompatActivity {
                 int phone = Integer.parseInt(phoneStr);
 
                 // Tạo đối tượng ModelAddres
-                ModelAddres address = new ModelAddres(fullName, phone, enterAdress);
+                ModelAddres address = new ModelAddres(userId, fullName, phoneStr, enterAdress);
 
                 // Thêm vào cơ sở dữ liệu
                 boolean check = addressDAO.insertAddress(address);
                 if (check) {
                     Toast.makeText(this, "Thêm địa chỉ thành công", Toast.LENGTH_SHORT).show();
                     list.clear();
-                    list.addAll(addressDAO.getAllAddresses());
+                    list.addAll(addressDAO.getAllAddresses(userId));
                     adapterAdderss.notifyDataSetChanged();
                 } else {
                     Toast.makeText(this, "Thêm địa chỉ thất bại", Toast.LENGTH_SHORT).show();

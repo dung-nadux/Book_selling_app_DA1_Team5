@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 public class DBHelper extends SQLiteOpenHelper {
 
     public DBHelper(@Nullable Context context) {
-        super(context, "DBBookInfo", null, 6);
+        super(context, "DBBookInfo", null, 8);
     }
 
     @Override
@@ -38,6 +38,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "BookID INTEGER, " +
                 "quantity INTEGER, " +
                 "Amount DOUBLE, " +
+                "STATUS INTEGER DEFAULT 0," +
                 "PRIMARY KEY (UserID, BookID), " +
                 "FOREIGN KEY (UserID) REFERENCES USER(id), " + // Khóa ngoại tới bảng USER
                 "FOREIGN KEY (BookID) REFERENCES PRODUCTS(id));"; // Khóa ngoại tới bảng PRODUCTS
@@ -49,10 +50,18 @@ public class DBHelper extends SQLiteOpenHelper {
                 "email TEXT, " +
                 "password TEXT," +
                 "fullname TEXT, "+
-                "phone INTEGER, "+
+                "phone TEXT, "+
                 "address TEXT, " +
                 "status INTEGER DEFAULT 1);";
         db.execSQL(createTableUser);
+
+        String createTableAddress = "CREATE TABLE ADDRESS(" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "UserID INTEGER," +
+                "fullname TEXT," +
+                "phone TEXT," +
+                "address TEXT)";
+        db.execSQL(createTableAddress);
 
         String createTableWallet = "CREATE TABLE WALLET(" +
                 "UserID INTEGER PRIMARY KEY," +
@@ -72,14 +81,16 @@ public class DBHelper extends SQLiteOpenHelper {
         String createTableOrder = "CREATE TABLE ORDERS(" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "UserID INTEGER, " +
-                "discountVoucherID INTEGER," +
-                "shippingVoucherID INTEGER," +
+                "discountVoucherID INTEGER DEFAULT -1," +
+                "shippingVoucherID INTEGER DEFAULT -1," +
                 "status TEXT," +
                 "totalPrice DOUBLE," +
                 "orderDate DATETIME DEFAULT CURRENT_TIMESTAMP," +
+                "address INTEGER," +
                 "FOREIGN KEY (UserID) REFERENCES USER(id)," +
                 "FOREIGN KEY (discountVoucherID) REFERENCES VOUCHER(id)," +
-                "FOREIGN KEY (shippingVoucherID) REFERENCES VOUCHER(id))";
+                "FOREIGN KEY (shippingVoucherID) REFERENCES VOUCHER(id)," +
+                "FOREIGN KEY (address) REFERENCES ADDRESS(id))";
         db.execSQL(createTableOrder);
 
         String createTableOrderDetail = "CREATE TABLE ORDERDETAIL(" +

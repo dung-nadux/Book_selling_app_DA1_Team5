@@ -1,19 +1,23 @@
 package fpoly.dungnm.book_selling_app.models;
 
-public class ModelCart {
+import java.io.Serializable;
+
+public class ModelCart implements Serializable {
     private int userID;
     private int bookID;
     private int quantity;
     private double amount;
+    private int status;
 
     public ModelCart() {
     }
 
-    public ModelCart(int userID, int bookID, int quantity, double amount) {
+    public ModelCart(int userID, int bookID, int quantity, double amount, int status) {
         this.userID = userID;
         this.bookID = bookID;
         this.quantity = quantity;
         this.amount = amount;
+        this.status = status;
     }
 
     public int getUserID() {
@@ -46,5 +50,13 @@ public class ModelCart {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

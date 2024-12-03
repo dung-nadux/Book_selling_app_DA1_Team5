@@ -13,6 +13,12 @@ import fpoly.dungnm.book_selling_app.models.ModelCart;
 import fpoly.dungnm.book_selling_app.models.ModelProducts;
 
 public class CartDAO {
+    private static final String TABLE_CART = "CART";
+    private static final String COLUMN_USER_ID = "UserID";
+    private static final String COLUMN_BOOK_ID = "BookID";
+    private static final String COLUMN_QUANTITY = "quantity";
+    private static final String COLUMN_AMOUNT = "amount";
+    private static final String COLUMN_STATUS = "status";
     SQLiteDatabase database;
     DBHelper dbHelper;
 
@@ -31,7 +37,8 @@ public class CartDAO {
                         cursor.getInt(0),      // userID
                         cursor.getInt(1),     // bookID
                         cursor.getInt(2),   // quantity
-                        cursor.getDouble(3)  // amount
+                        cursor.getDouble(3),  // amount
+                        cursor.getInt(4)           // status
                 ));
             } while (cursor.moveToNext());
         }
@@ -76,9 +83,21 @@ public class CartDAO {
         return result > 0;
     }
 
+    public boolean updateStatus(int userID, int productId, int status) {
+        ContentValues values = new ContentValues();
+        values.put("status", status);
+        int result = database.update("CART", values, "UserID = ? AND BookID = ?", new String[]{String.valueOf(userID),String.valueOf(productId)});
+        return result > 0;
+    }
+
     // Xóa sản phẩm
     public boolean deleteCart(int userID,int bookID) {
         int result = database.delete("CART", "UserID = ? AND BookID = ?", new String[]{String.valueOf(userID), String.valueOf(bookID)});
+        return result > 0;
+    }
+
+    public boolean deleteCartFromOrder(int userID){
+        int result = database.delete("CART", "UserID = ? AND Status = 1", new String[]{String.valueOf(userID)});
         return result > 0;
     }
 
@@ -93,12 +112,11 @@ public class CartDAO {
                     cursor.getInt(0),      // userID
                     cursor.getInt(1),      // bookID
                     cursor.getInt(2),      // quantity
-                    cursor.getDouble(3)    // amount
+                    cursor.getDouble(3),    // amount
+                    cursor.getInt(4)       // status
             );
         }
-        if (cursor != null) {
-            cursor.close();
-        }
+        cursor.close();
         return cart;
     }
 

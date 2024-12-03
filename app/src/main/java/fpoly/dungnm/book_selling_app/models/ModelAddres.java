@@ -1,19 +1,24 @@
 package fpoly.dungnm.book_selling_app.models;
 
-public class ModelAddres {
-    int id;
-    String fullName;
-    int phone;
-    String address;
+import java.io.Serializable;
 
-    public ModelAddres(String fullName, int phone, String address) {
+public class ModelAddres implements Serializable {
+    private int id;
+    private int userId;
+    private String fullName;
+    private String phone;
+    private String address;
+
+    public ModelAddres(int userId, String fullName, String phone, String address) {
+        this.userId = userId;
         this.fullName = fullName;
         this.phone = phone;
         this.address = address;
     }
 
-    public ModelAddres(int id, String fullName, int phone, String address) {
+    public ModelAddres(int id, int userId, String fullName, String phone, String address) {
         this.id = id;
+        this.userId = userId;
         this.fullName = fullName;
         this.phone = phone;
         this.address = address;
@@ -30,6 +35,14 @@ public class ModelAddres {
     public ModelAddres() {
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
     public String getFullName() {
         return fullName;
     }
@@ -38,11 +51,11 @@ public class ModelAddres {
         this.fullName = fullName;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 

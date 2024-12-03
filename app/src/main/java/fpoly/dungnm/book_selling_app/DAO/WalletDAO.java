@@ -41,6 +41,7 @@ public class WalletDAO {
             wallet.setUserId(cursor.getInt(0));
             wallet.setBalance(cursor.getDouble(1));
         }
+        cursor.close();
         return wallet;
     }
 }

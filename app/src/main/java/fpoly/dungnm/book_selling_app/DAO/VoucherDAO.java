@@ -38,6 +38,26 @@ public class VoucherDAO {
         return list;
     }
 
+    public ArrayList<ModelVoucher> getVoucherByType(String type) {
+        ArrayList<ModelVoucher> list = new ArrayList<>();
+        String sql = "SELECT * FROM VOUCHER WHERE TYPE = ?";
+        Cursor cursor = database.rawQuery(sql, new String[]{type});
+        if (cursor.moveToFirst()) {
+            do {
+                ModelVoucher voucher = new ModelVoucher();
+                voucher.setId(cursor.getInt(0));
+                voucher.setType(cursor.getString(1));
+                voucher.setDiscount(cursor.getInt(2));
+                voucher.setContent(cursor.getString(3));
+                voucher.setStartDate(cursor.getString(4));
+                voucher.setEndDate(cursor.getString(5));
+                list.add(voucher);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        return list;
+    }
+
     public ModelVoucher getVoucherById(int id) {
         ModelVoucher voucher = new ModelVoucher();
         String sql = "SELECT * FROM VOUCHER WHERE ID = ?";

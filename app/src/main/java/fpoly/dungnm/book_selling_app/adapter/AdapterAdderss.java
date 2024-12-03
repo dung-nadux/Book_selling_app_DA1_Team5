@@ -22,6 +22,7 @@ import fpoly.dungnm.book_selling_app.DAO.AddressDAO;
 import fpoly.dungnm.book_selling_app.MainActivity;
 import fpoly.dungnm.book_selling_app.R;
 import fpoly.dungnm.book_selling_app.models.ModelAddres;
+import fpoly.dungnm.book_selling_app.models.ModelVoucher;
 import fpoly.dungnm.book_selling_app.pages.order_payment.OrderPaymentActivity;
 
 public class AdapterAdderss extends RecyclerView.Adapter<AdapterAdderss.ViewHolder> {
@@ -34,6 +35,14 @@ public class AdapterAdderss extends RecyclerView.Adapter<AdapterAdderss.ViewHold
         this.addressList = addressList;
         this.addressDAO = new AddressDAO(context);
     }
+
+    public interface OnItemClickVoucher {
+        void onCheckVoucher(ModelAddres addres);
+    }
+    public void setOnItemClickListener(OnItemClickVoucher click) {
+        this.click = click;
+    }
+    private OnItemClickVoucher click;
 
     @NonNull
     @Override
@@ -55,12 +64,7 @@ public class AdapterAdderss extends RecyclerView.Adapter<AdapterAdderss.ViewHold
         holder.itemView.setOnClickListener(v -> showEditDialog(holder.getAdapterPosition()));
 
         holder.btnUse.setOnClickListener(v -> {
-            Intent intent = new Intent(context, OrderPaymentActivity.class);
-            intent.putExtra("fullname", address.getFullName());
-            intent.putExtra("phone", address.getPhone() + "");
-            intent.putExtra("address", address.getAddress());
-//            Log.e(TAG, "onBindViewHolder: ", );
-            context.startActivity(intent);
+            click.onCheckVoucher(address);
         });
 
         // Xóa sản phẩm khỏi giỏ hàng
@@ -120,7 +124,7 @@ public class AdapterAdderss extends RecyclerView.Adapter<AdapterAdderss.ViewHold
                 // Cập nhật đối tượng và cơ sở dữ liệu
                 address.setAddress(newAddress);
                 address.setFullName(newFullName);
-                address.setPhone(newPhone);
+                address.setPhone(phoneStr);
 
                 if (addressDAO.updateAddress(address)) {
                     Toast.makeText(context, "Cập nhật địa chỉ thành công", Toast.LENGTH_SHORT).show();

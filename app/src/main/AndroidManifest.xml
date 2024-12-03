@@ -18,6 +18,9 @@
         android:theme="@style/Theme.Book_selling_app"
         tools:targetApi="31">
         <activity
+            android:name=".pages.crud_frofile.crud_voucher_user.VoucherActivity"
+            android:exported="false" />
+        <activity
             android:name=".pages.order_payment.OrderPaymentActivity"
             android:exported="false" />
         <activity

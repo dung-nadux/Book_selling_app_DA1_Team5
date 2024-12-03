@@ -1,7 +1,10 @@
 package fpoly.dungnm.book_selling_app.adapter;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
@@ -11,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -18,35 +22,61 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import fpoly.dungnm.book_selling_app.DAO.CartDAO;
+import fpoly.dungnm.book_selling_app.DAO.OrderDetailDAO;
+import fpoly.dungnm.book_selling_app.DAO.ProductDAO;
 import fpoly.dungnm.book_selling_app.R;
+import fpoly.dungnm.book_selling_app.models.ModelCart;
+import fpoly.dungnm.book_selling_app.models.ModelOrderDetail;
 import fpoly.dungnm.book_selling_app.models.ModelProducts;
 import fpoly.dungnm.book_selling_app.pages.productdetail.ProductDetailsActivity;
 
 public class AdapterOrderPayment extends RecyclerView.Adapter<AdapterOrderPayment.ViewHoder> {
     Context context;
-    ArrayList<ModelProducts> list;
-    CartDAO cartDAO;
+    ArrayList<ModelOrderDetail> list;
+    private OrderDetailDAO orderDetailDAO;
+    ProductDAO productDAO;
+    private int userId;
+    private double totalPrice;
 
-    public AdapterOrderPayment(Context context, ArrayList<ModelProducts> listSanPham) {
+    private NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+
+    public AdapterOrderPayment(Context context, ArrayList<ModelOrderDetail> list) {
         this.context = context;
-        this.list = listSanPham;
-        cartDAO = new CartDAO(context);
+        this.list = list;
     }
 
+    private OnChangeTotalPriceListener onChangeTotalPriceListener;
+    public interface OnChangeTotalPriceListener {
+        void onChange(double price);
+    }
+
+    public void setOnChangeTotalPriceListener(OnChangeTotalPriceListener onChangeTotalPriceListener) {
+        this.onChangeTotalPriceListener = onChangeTotalPriceListener;
+    }
 
     @NonNull
     @Override
     public ViewHoder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_order_payment, parent, false);
+        SharedPreferences sharedPreferences = context.getSharedPreferences("CHECK_LOGIN", MODE_PRIVATE);
+        userId = sharedPreferences.getInt("USER_ID", -1);
         return new ViewHoder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHoder holder, int position) {
-        ModelProducts product = list.get(position);
+        ModelOrderDetail orderDetail = list.get(position);
+
+        productDAO = new ProductDAO(context);
+        orderDetailDAO = new OrderDetailDAO(context);
+
+        ModelProducts product = productDAO.getProductById(orderDetail.getBookingId());
         byte[] imageBytes = product.getImage();
 
 //        Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
@@ -61,8 +91,8 @@ public class AdapterOrderPayment extends RecyclerView.Adapter<AdapterOrderPaymen
             holder.imgAvaterOrderProduct.setImageResource(R.drawable.ic_launcher_background); // Ví dụ: ảnh mặc định
         }
         holder.tvTitleOrderProduct.setText(product.getTitle());
-        holder.tvPriceOrderProduct.setText(String.valueOf(product.getPrice()));
-        holder.tvQualityOrderProduct.setText(String.valueOf(product.getQuantity()));
+        holder.tvPriceOrderProduct.setText(formatter.format(orderDetail.getUnitPrice())+"đ");
+        holder.tvQualityOrderProduct.setText("Số lượng: " + orderDetail.getQuantity());
 
 
         // Nếu có URL ảnh, bạn có thể sử dụng Glide hoặc Picasso để tải ảnh từ URL
@@ -79,21 +109,36 @@ public class AdapterOrderPayment extends RecyclerView.Adapter<AdapterOrderPaymen
 
         // Xóa sản phẩm khỏi giỏ hàng
         holder.imgDeleteOrderProduct.setOnClickListener(v -> {
-            new AlertDialog.Builder(context)
-                    .setTitle("Bạn có muốn bỏ sản phẩm này không?")
-                    .setPositiveButton("Có", (dialog, which) -> {
-//                        cartDAO.deleteCart(product.getId());
-                        list.remove(position);
-                        notifyItemRemoved(position);
-                        notifyItemRangeChanged(position, list.size());
-                            })
-                    .setNegativeButton("Không", (dialog, which) -> {
-                        dialog.dismiss();
-                    })
-                    .create().show();
+            if (list.size() <=1) {
+                Toast.makeText(context, "Đơn hàng phải có ít nhất 1 sản phẩm", Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                new AlertDialog.Builder(context)
+                        .setTitle("Bạn có muốn bỏ sản phẩm này không?")
+                        .setPositiveButton("Có", (dialog, which) -> {
+                            orderDetailDAO.deleteOrderDetail(orderDetail.getOrderId(), orderDetail.getBookingId());
+                            list.remove(position);
+                            notifyItemRemoved(position);
+                            notifyItemRangeChanged(position, list.size());
+                            onChangeTotalPriceListener.onChange(tinhTong());
+                        })
+                        .setNegativeButton("Không", (dialog, which) -> {
+                            dialog.dismiss();
+                        })
+                        .create().show();
+            }
         });
 
 
+
+    }
+
+    private double tinhTong() {
+        totalPrice = 0;
+        for (ModelOrderDetail detail : list) {
+            totalPrice += detail.getUnitPrice()* detail.getQuantity();
+        }
+        return totalPrice;
     }
 
     @Override

@@ -126,9 +126,6 @@ public class SanPhamFragment extends Fragment {
         // Lấy danh sách danh mục từ cơ sở dữ liệu
         categoryDAO = new CategoryDAO(getContext());
         listCategory = categoryDAO.getAllCategory();
-        for (ModelCategory category : listCategory) {
-            Log.e("cate", ""+category.getId());
-        }
 
         AdapterSpinnerCategory adapterSpinnerCategory = new AdapterSpinnerCategory(getContext(), listCategory);
         spCategory.setAdapter(adapterSpinnerCategory);
@@ -187,9 +184,7 @@ public class SanPhamFragment extends Fragment {
         String description = edDescription.getText().toString();
         int quantity = Integer.parseInt(edQuantity.getText().toString());
         ModelCategory categoryModel = listCategory.get(spCategory.getSelectedItemPosition());
-        int category = categoryModel.getId() - 1;
-        Toast.makeText(getContext(), "position: " + spCategory.getSelectedItemPosition() + ", category: " + category, Toast.LENGTH_SHORT).show();
-        // cách 2
+        int category = categoryModel.getId() - 1;// cách 2
         // Chuyển đổi ảnh thành byte[]
         byte[] imageByteArray = imageUriToByteArray(imageUri);
 
@@ -202,6 +197,7 @@ public class SanPhamFragment extends Fragment {
             Toast.makeText(getContext(), "Thêm sản phẩm thành công", Toast.LENGTH_SHORT).show();
             listProducts = productDAO.getAllProducts();
             adapter.setData(listProducts);
+            imageUri = null;
         } else {
             Toast.makeText(getContext(), "Thêm sản phẩm thất bại", Toast.LENGTH_SHORT).show();
         }
@@ -239,7 +235,6 @@ public class SanPhamFragment extends Fragment {
         spCategory = dialogView.findViewById(R.id.spCategory);
         edQuantity = dialogView.findViewById(R.id.edQuantity);
 
-        Toast.makeText(getContext(), "category: " + category, Toast.LENGTH_SHORT).show();
         categoryDAO = new CategoryDAO(getContext());
         listCategory = categoryDAO.getAllCategory();
         AdapterSpinnerCategory adapterSpinnerCategory = new AdapterSpinnerCategory(getContext(), listCategory);
@@ -292,8 +287,14 @@ public class SanPhamFragment extends Fragment {
             if (imageUri != null) {
                 updatedProduct.setImage(imageUriToByteArray(imageUri)); // Chuyển đổi ảnh mới thành byte[]
             } else {
+                String[] byteStrings = image.replaceAll("[\\[\\] ]", "").split(","); // Xóa dấu ngoặc và khoảng trắng
+                byte[] imageBytes = new byte[byteStrings.length];
+                for (int i = 0; i < byteStrings.length; i++) {
+                    imageBytes[i] = Byte.parseByte(byteStrings[i]);
+                }
+
                 // Giữ nguyên ảnh cũ
-                updatedProduct.setImage(image.getBytes());
+                updatedProduct.setImage(imageBytes);
             }
 
             boolean success = productDAO.updateProduct(updatedProduct);
@@ -301,6 +302,7 @@ public class SanPhamFragment extends Fragment {
                 Toast.makeText(getContext(), "Cập nhật thành công", Toast.LENGTH_SHORT).show();
                 listProducts = productDAO.getAllProducts();
                 adapter.setData(listProducts);
+                imageUri = null;
             } else {
                 Toast.makeText(getContext(), "Cập nhật thất bại", Toast.LENGTH_SHORT).show();
             }

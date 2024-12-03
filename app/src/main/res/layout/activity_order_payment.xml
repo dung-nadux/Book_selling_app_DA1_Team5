@@ -15,34 +15,32 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-            <RelativeLayout
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imgBackOderpayment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/back" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/imgBackOderpayment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/back"
-                    android:layout_marginLeft="10dp"
-                    />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Đơn hàng"
-                    android:textSize="30dp"
-                    android:gravity="center"
-                    />
-            </RelativeLayout>
+                android:gravity="center"
+                android:text="Đơn hàng"
+                android:textSize="30dp" />
+        </RelativeLayout>
 
         <!-- Nơi nhận hàng -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="20dp"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="20dp">
 
             <RelativeLayout
                 android:id="@+id/rlAdress"
@@ -93,44 +91,66 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"/>
+            android:layout_marginBottom="20dp" />
 
         <!-- Voucher -->
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/chosse_voucher"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="20dp">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="10dp"
-                    android:src="@drawable/voucher" />
+                    android:orientation="horizontal">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/voucher" />
+
+                    <TextView
+                        android:id="@+id/tvVoucherAdd"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Voucher "
+                        android:textColor="#333333"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:contentDescription="Choose Voucher"
+                        android:src="@drawable/next" />
+                </LinearLayout>
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Voucher"
-                    android:textColor="#333333"
-                    android:textSize="16sp" />
-
-                <ImageView
+                    android:id="@+id/tv_voucher_discount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:contentDescription="Choose Voucher"
-                    android:src="@drawable/next" />
+                    android:layout_marginTop="8dp"
+                    android:textColor="#FF5722"
+                    android:visibility="gone"
+                    android:text="Giam gia: 25%"/>
+                <TextView
+                    android:id="@+id/tv_voucher_shipping"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="#239E28"
+                    android:visibility="gone"
+                    android:text="Giam gia van chuyen: 25%"/>
             </LinearLayout>
-
         </androidx.cardview.widget.CardView>
 
         <!-- Hình thức thanh toán -->
@@ -175,6 +195,15 @@
                         android:layout_height="wrap_content"
                         android:text="Ví điện tử"
                         android:textColor="#333333" />
+
+                    <TextView
+                        android:id="@+id/tvWalletBalance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Số dư ví: 50,000 VNĐ"
+                        android:visibility="gone"
+                        android:layout_marginLeft="20dp"
+                        android:textColor="#333333" />
                 </RadioGroup>
             </LinearLayout>
 
@@ -194,26 +223,135 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="Tổng cộng"
-                    android:textColor="#333333"
-                    android:textSize="16sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <TextView
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="Tiền ship"
+                        android:textColor="#333333"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tvMoneyShip"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:text="+20.000đ"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <!-- Đường gạch chân -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E0E0E0"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="Tổng giá sản phẩm"
+                        android:textColor="#333333"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tvMoneyProduct"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:text="120.000đ"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <!-- Đường gạch chân -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E0E0E0"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tvVoucherName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="Voucher"
+                        android:textColor="#333333"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tvVoucherPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:text="-20.000đ"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <!-- Đường gạch chân -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E0E0E0"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    />
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="120.000đ"
-                    android:textColor="#FF5722"
-                    android:textSize="20sp" />
+                    android:layout_marginTop="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="Tổng cộng"
+                        android:textColor="#333333"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tvTotalMoney"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:text="120.000đ"
+                        android:textColor="#FF5722"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+                <!-- Đường gạch chân -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E0E0E0"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    />
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <!-- Nút Thanh toán -->
         <Button
+            android:id="@+id/btnPayOrderProduct"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"

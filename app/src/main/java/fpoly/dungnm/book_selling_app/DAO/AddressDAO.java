@@ -21,17 +21,18 @@ public class AddressDAO {
     }
 
     // Lấy tất cả địa chỉ
-    public ArrayList<ModelAddres> getAllAddresses() {
+    public ArrayList<ModelAddres> getAllAddresses(int userId) {
         ArrayList<ModelAddres> addressList = new ArrayList<>();
         database = dbHelper.getReadableDatabase();
-        Cursor cursor = database.rawQuery("SELECT * FROM ADDRESS", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM ADDRESS WHERE UserID = ?", new String[]{String.valueOf(userId)});
         if (cursor.moveToFirst()) {
             do {
                 addressList.add(new ModelAddres(
                         cursor.getInt(0),       // id
-                        cursor.getString(1),    // fullname
-                        cursor.getInt(2),       // phone
-                        cursor.getString(3)     // address
+                        cursor.getInt(1),    // fullname
+                        cursor.getString(2),    // fullname
+                        cursor.getString(3),       // phone
+                        cursor.getString(4)     // address
                 ));
             } while (cursor.moveToNext());
         }
@@ -42,6 +43,7 @@ public class AddressDAO {
     // Thêm địa chỉ mới
     public boolean insertAddress(ModelAddres address) {
         ContentValues values = new ContentValues();
+        values.put("UserID", address.getUserId());
         values.put("fullname", address.getFullName());
         values.put("phone", address.getPhone());
         values.put("address", address.getAddress());
@@ -72,9 +74,9 @@ public class AddressDAO {
         Cursor cursor = database.rawQuery("SELECT * FROM ADDRESS WHERE id = ?", new String[]{String.valueOf(id)});
         if (cursor != null && cursor.moveToFirst()) {
             address = new ModelAddres(
-                    cursor.getInt(0),       // id
+                    cursor.getInt(0),       // userId
                     cursor.getString(1),    // fullname
-                    cursor.getInt(2),       // phone
+                    cursor.getString(2),       // phone
                     cursor.getString(3)     // address
             );
         }
