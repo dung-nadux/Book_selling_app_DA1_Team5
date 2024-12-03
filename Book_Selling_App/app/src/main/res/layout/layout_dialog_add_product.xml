@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="15dp"
+    android:background="@color/white"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/tvtitle_dialog_add_product"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thêm sản phẩm"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:textAlignment="center"/>
+    <!--Ảnh sản phẩm-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ảnh sản phẩm(link)">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtimage_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <!--Ten san pham-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tên sản phẩm">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtname_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <!--Mo ta san pham-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Mô tả sản phẩm">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtdescription_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <!--Gia san pham-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Giá sản phẩm">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtprice_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <!--Cate san pham-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Loại sản phẩm:"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="start"/>
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/rdPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Phone"/>
+        <RadioButton
+            android:id="@+id/rdLaptop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Laptop"/>
+        <RadioButton
+            android:id="@+id/rdAccessory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Accessory"/>
+    </RadioGroup>
+
+    <!--So luong san pham-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Số lượng sản phẩm">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtstock_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!--Trang thai san pham-->
+    <LinearLayout
+        android:id="@+id/radio_status_product"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Trạng thái sản phẩm:"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="start"/>
+        <RadioGroup
+            android:id="@+id/rdgStatus_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rdConHang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Còn hàng"/>
+            <RadioButton
+                android:id="@+id/rdHetHang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hết hàng"/>
+            <RadioButton
+                android:id="@+id/rdNgungBan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ngừng bán"/>
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+        <TextView
+            android:id="@+id/btnCancel_dialog_add_product"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/white"
+            android:text="Hủy"
+            android:background="@drawable/bg_btn_cancel"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+        <TextView
+            android:id="@+id/btnOk_dialog_add_product"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/white"
+            android:text="Thêm"
+            android:background="@drawable/bg_btn_add"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+</LinearLayout>

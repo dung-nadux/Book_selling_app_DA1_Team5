@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="20dp"
+    android:layout_marginVertical="8dp"
+    android:background="@drawable/custom_background">
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="Chờ xác nhận"
+        android:textColor="#FF5722"/>
+    <!-- Phần chứa RecyclerView, có thể thu gọn hoặc mở rộng -->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvOrderStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/tvToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:layout_gravity="center"
+        android:text="Xem thêm"
+        android:textSize="15sp"
+        android:textColor="#676666"/>
+
+    <TextView
+        android:id="@+id/tvTongTien"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:layout_gravity="end"
+        android:text="100.000đ"
+        android:textSize="20sp"
+        android:textColor="#FF5722"/>
+    <TextView
+        android:id="@+id/btnHuyDon"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:layout_gravity="end"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/bt_btn_red_wap"
+        android:text="Hủy đơn hàng"
+        android:textColor="#FF3527"/>
+
+
+</LinearLayout>

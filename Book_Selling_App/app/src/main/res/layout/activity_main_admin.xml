@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activities.MainAdminActivity">
+    <FrameLayout
+        android:id="@+id/container_admin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+    <LinearLayout
+        android:id="@+id/nav_bar_admin"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/img_bg_trans">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:background="@drawable/bg_img_bottom">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+            <LinearLayout
+                android:id="@+id/nav_product"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:background="@drawable/bg_bottom_navigation">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_product"/>
+            </LinearLayout>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+            <LinearLayout
+                android:id="@+id/nav_order_admin"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:background="@drawable/bg_bottom_navigation"
+                android:backgroundTint="@color/white">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_order_admin"/>
+            </LinearLayout>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+            <LinearLayout
+                android:id="@+id/nav_thongke"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:background="@drawable/bg_bottom_navigation"
+                android:backgroundTint="@color/white">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_thongke"/>
+            </LinearLayout>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+            <LinearLayout
+                android:id="@+id/nav_user_admin"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:background="@drawable/bg_bottom_navigation"
+                android:backgroundTint="@color/white">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_user_admin"/>
+            </LinearLayout>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

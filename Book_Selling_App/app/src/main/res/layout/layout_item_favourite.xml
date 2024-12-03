@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="160dp"
+    android:padding="25dp"
+    android:layout_marginVertical="10dp"
+    android:id="@+id/item_product_favourite"
+    android:background="@drawable/bg_item">
+
+    <ImageView
+        android:id="@+id/img_product_favourite"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerVertical="true"
+        android:src="@mipmap/ic_launcher"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/img_product_favourite"
+        android:layout_marginLeft="15dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_name_product_favourite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Samsung galaxy S24 Ultra"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="18sp"/>
+        <TextView
+            android:id="@+id/tv_stock_product_favourite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="so luong: 20"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="15sp"/>
+        <TextView
+            android:id="@+id/tv_price_product_favourite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="so luong: 20"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="#FF4949"
+            android:textSize="18sp"/>
+    </LinearLayout>
+</RelativeLayout>
