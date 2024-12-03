@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "fpoly.dungnm.assignment_resapi"
+    namespace = "fpoly.dungnm.duan1"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "fpoly.dungnm.assignment_resapi"
+        applicationId = "fpoly.dungnm.duan1"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

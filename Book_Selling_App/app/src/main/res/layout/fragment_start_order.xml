@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.StartOrderFragment">
+    tools:context=".fragments.fragment_user.fragment_cart_and_order.StartOrderFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <FrameLayout

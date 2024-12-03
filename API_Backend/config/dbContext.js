@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const mongoURI = "mongodb://127.0.0.1:27017/ASM_RESAPI";
+const mongoURI = "mongodb://127.0.0.1:27017/DuAn1";
 
 const connect = async () => {
     try {

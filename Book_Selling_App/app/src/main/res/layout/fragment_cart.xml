@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".fragments.CartFragment">
+    tools:context=".fragments.fragment_user.fragment_cart_and_order.CartFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <FrameLayout

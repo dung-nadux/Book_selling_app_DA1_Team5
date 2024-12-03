@@ -37,6 +37,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tác giả">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtauthor_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
     <!--Mo ta san pham-->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -45,7 +54,9 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtdescription_product"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"/>
     </com.google.android.material.textfield.TextInputLayout>
     <!--Gia san pham-->
     <com.google.android.material.textfield.TextInputLayout
@@ -74,17 +85,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Phone"/>
+            android:text="Life"/>
         <RadioButton
             android:id="@+id/rdLaptop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Laptop"/>
+            android:text="Story"/>
         <RadioButton
             android:id="@+id/rdAccessory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Accessory"/>
+            android:text="Academic"/>
     </RadioGroup>
 
     <!--So luong san pham-->

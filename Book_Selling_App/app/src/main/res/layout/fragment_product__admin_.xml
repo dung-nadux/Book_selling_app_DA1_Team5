@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context=".fragments.Product_Admin_Fragment">
+    tools:context=".fragments.fragment_admin.Product_Admin_Fragment">
 
     <!-- TODO: Update blank fragment layout -->
     <FrameLayout
@@ -22,7 +22,7 @@
             android:layout_width="200dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_text_logo"/>
+            android:src="@drawable/ic_text_logo1"/>
         <ImageView
             android:id="@+id/btnAddProduct"
             android:layout_width="24dp"

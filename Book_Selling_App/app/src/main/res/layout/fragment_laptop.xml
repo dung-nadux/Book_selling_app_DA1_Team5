@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".fragments.LaptopFragment">
+    tools:context=".fragments.fragment_user.fragment_home_user.StoryFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="15dp"
-        android:text="Laptop"
+        android:text="Story"
         android:textSize="30sp"
         android:fontFamily="sans-serif-black"/>
     <androidx.recyclerview.widget.RecyclerView

@@ -26,6 +26,8 @@
             android:layout_height="wrap_content"
             android:text="Samsung galaxy S24 Ultra"
             android:fontFamily="sans-serif-medium"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textSize="18sp"/>
         <TextView
             android:id="@+id/tv_stock_product_favourite"

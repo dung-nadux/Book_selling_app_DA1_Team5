@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
-    tools:context=".fragments.Thong_Ke_Fragment">
+    tools:context=".fragments.fragment_admin.Thong_Ke_Fragment">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
@@ -61,8 +61,11 @@
                     android:id="@+id/tv_name_product_best"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
                     android:textSize="20sp"
-                    android:text="Iphone 16"/>
+                    android:text="Iphone 16"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
                 <TextView
                     android:id="@+id/tv_quantity_product_best"
                     android:layout_width="wrap_content"

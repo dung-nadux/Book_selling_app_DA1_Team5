@@ -28,9 +28,6 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".TestActivity"
-            android:exported="false" />
-        <activity
             android:name=".activities.WellcomActivity"
             android:exported="true">
             <intent-filter>
